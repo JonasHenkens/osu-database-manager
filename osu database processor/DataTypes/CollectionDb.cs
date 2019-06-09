@@ -10,10 +10,13 @@ namespace osu_database_processor.DataTypes
         public int NumberOfCollections { get; private set; }
         public List<Collection> Collections { get; private set; }
 
+        public CollectionDb() { }
+
         public CollectionDb(OsuReader o)
         {
             ReadFromStream(o);
         }
+
         public void ReadFromStream(OsuReader o)
         {
             Version = o.ReadInt32();

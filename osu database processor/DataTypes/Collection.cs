@@ -10,6 +10,8 @@ namespace osu_database_processor.DataTypes
         public int NumberOfBeatmaps { get; private set; }
         public string[] MD5s { get; private set; }
 
+        public Collection() { }
+
         public Collection(OsuReader o)
         {
             ReadFromStream(o);
