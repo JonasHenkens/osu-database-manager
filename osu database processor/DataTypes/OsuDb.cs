@@ -13,7 +13,7 @@ namespace osu_database_processor.DataTypes
         public String PlayerName { get; private set; }
         public int NumberOfBeatmaps { get; private set; }
         public List<Beatmap> Beatmaps { get; private set; } // beatmaps
-        public int Unknown { get; private set; } // always seems to be 4
+        // Unknown, always seems to be 4
 
         public OsuDb() { }
 
@@ -30,9 +30,10 @@ namespace osu_database_processor.DataTypes
             UnlockDate = o.ReadDateTime();
             PlayerName = o.ReadString();
             NumberOfBeatmaps = o.ReadInt32();
+            Beatmaps = new List<Beatmap>();
             for (int i = 0; i < NumberOfBeatmaps; i++)
             {
-                Beatmaps.Add(new Beatmap(o));
+                Beatmaps.Add(new Beatmap(o, Version));
             }
             o.AssertByte(4, "OsuDb: Unknown is not 4");
         }

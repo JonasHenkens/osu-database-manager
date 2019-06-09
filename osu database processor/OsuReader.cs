@@ -55,7 +55,7 @@ namespace osu_database_processor
         {
             if (ReadByte() == 0x08) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
             int Int = ReadInt32();
-            if (ReadByte() == 0x08) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
+            if (ReadByte() == 0x0b) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
             double Double = ReadDouble();
             return new IntDoublePair(Int, Double);
         }

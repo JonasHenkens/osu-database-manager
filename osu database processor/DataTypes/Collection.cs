@@ -24,14 +24,7 @@ namespace osu_database_processor.DataTypes
             MD5s = new string[NumberOfBeatmaps];
             for (int i = 0; i < NumberOfBeatmaps; i++)
             {
-                try
-                {
-                    MD5s[i] = o.ReadString();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                MD5s[i] = o.ReadString();
             }
         }
 
