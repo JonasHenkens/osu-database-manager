@@ -22,6 +22,11 @@ namespace osu_database_processor
             }
         }
 
+        public void PrintPosition()
+        {
+            Console.WriteLine(BaseStream.Position);
+        }
+
         public ulong ReadULEB128()
         {
             ulong result = 0;
@@ -45,7 +50,7 @@ namespace osu_database_processor
                     return base.ReadString();
                 case 0x00:
                     Console.WriteLine("ReadString: first byte is empty @" + (BaseStream.Position - 1));
-                    return null;
+                    return "";
             }
             Console.WriteLine("ReadString: first byte wrong @" + (BaseStream.Position - 1));
             return null;
@@ -77,7 +82,27 @@ namespace osu_database_processor
         {
             if (ReadByte() != correctByte)
             {
-                Console.WriteLine("AssertByte failed: " + failMessage + " @" + (BaseStream.Position - 1) );
+                Console.WriteLine("AssertByte failed: " + failMessage + " @" + (BaseStream.Position - 1));
+                return false;
+            }
+            return true;
+        }
+
+        public bool AssertString(string correctString, string failMessage)
+        {
+            if (!ReadString().Equals(correctString))
+            {
+                Console.WriteLine("AssertString failed: " + failMessage + " @" + (BaseStream.Position - 1));
+                return false;
+            }
+            return true;
+        }
+
+        public bool AssertInt(int correctInt, string failMessage)
+        {
+            if (ReadInt32() != correctInt)
+            {
+                Console.WriteLine("AssertInt failed: " + failMessage + " @" + (BaseStream.Position - 1));
                 return false;
             }
             return true;
