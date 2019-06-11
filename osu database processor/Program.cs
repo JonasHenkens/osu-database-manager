@@ -8,9 +8,7 @@ namespace osu_database_processor
     {
         static void Main(string[] args)
         {
-            FileStream fs = new FileStream("D:\\scores.db", FileMode.Open);
-            OsuReader OR = new OsuReader(fs);
-            ScoresDb Db = new ScoresDb(OR);
+
         }
     }
 }

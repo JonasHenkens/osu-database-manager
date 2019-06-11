@@ -10,18 +10,6 @@ namespace osu_database_processor
     {
         public OsuReader(Stream input) : base(input) { }
 
-        public void PrintBytes(int amount)
-        {
-            int i = 0;
-            while (i < amount)
-            {
-                byte Byte = base.ReadByte();
-                string ByteString = Convert.ToString(Byte, 2).PadLeft(8, '0');
-                Console.WriteLine(ByteString + " @" + (BaseStream.Position - 1));
-                i++;
-            }
-        }
-
         public void PrintPosition()
         {
             Console.WriteLine(BaseStream.Position);
@@ -58,9 +46,9 @@ namespace osu_database_processor
 
         public IntDoublePair ReadIntDoublePair()
         {
-            if (ReadByte() == 0x08) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
+            if (!ReadByte().Equals(0x08)) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
             int Int = ReadInt32();
-            if (ReadByte() == 0x0b) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
+            if (!ReadByte().Equals(0x0b)) Console.WriteLine("ReadIntDoublePair: second byte wrong @" + (BaseStream.Position - 1));
             double Double = ReadDouble();
             return new IntDoublePair(Int, Double);
         }

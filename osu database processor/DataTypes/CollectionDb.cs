@@ -27,5 +27,15 @@ namespace osu_database_processor.DataTypes
                 Collections.Add(new Collection(o));
             }
         }
+
+        public void WriteToStream(OsuWriter o)
+        {
+            o.Write(Version);
+            o.Write(NumberOfCollections);
+            foreach (Collection item in Collections)
+            {
+                item.WriteToSteam(o);
+            }
+        }
     }
 }

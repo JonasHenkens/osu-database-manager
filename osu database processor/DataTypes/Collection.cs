@@ -28,5 +28,15 @@ namespace osu_database_processor.DataTypes
             }
         }
 
+        public void WriteToSteam(OsuWriter o)
+        {
+            o.Write(Name);
+            o.Write(NumberOfBeatmaps);
+            foreach (string item in MD5s)
+            {
+                o.Write(item);
+            }
+        }
+
     }
 }
