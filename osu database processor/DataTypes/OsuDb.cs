@@ -35,7 +35,22 @@ namespace osu_database_processor.DataTypes
             {
                 Beatmaps.Add(new Beatmap(o, Version));
             }
-            o.AssertByte(4, "OsuDb: Unknown is not 4");
+            o.AssertInt(4, "OsuDb: Unknown is not 4");
+        }
+
+        public void WriteToStream(OsuWriter o)
+        {
+            o.Write(Version);
+            o.Write(FolderCount);
+            o.Write(AccountUnlocked);
+            o.Write(UnlockDate);
+            o.Write(PlayerName);
+            o.Write(NumberOfBeatmaps);
+            foreach (var beatmap in Beatmaps)
+            {
+                beatmap.WriteToStream(o);
+            }
+            o.Write(4);
         }
     }
 }

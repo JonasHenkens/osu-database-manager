@@ -37,18 +37,16 @@ namespace osu_database_processor
                 case 0x0b:
                     return base.ReadString();
                 case 0x00:
-                    Console.WriteLine("ReadString: first byte is empty @" + (BaseStream.Position - 1));
-                    return "";
+                    return null;
             }
-            Console.WriteLine("ReadString: first byte wrong @" + (BaseStream.Position - 1));
-            return null;
+            throw new InvalidDataException("ReadString: first byte wrong @" + (BaseStream.Position - 1));
         }
 
         public IntDoublePair ReadIntDoublePair()
         {
-            if (!ReadByte().Equals(0x08)) Console.WriteLine("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
+            if (!ReadByte().Equals(0x08)) throw new InvalidDataException("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
             int Int = ReadInt32();
-            if (!ReadByte().Equals(0x0b)) Console.WriteLine("ReadIntDoublePair: second byte wrong @" + (BaseStream.Position - 1));
+            if (!ReadByte().Equals(0x0d)) throw new InvalidDataException("ReadIntDoublePair: second byte wrong @" + (BaseStream.Position - 1));
             double Double = ReadDouble();
             return new IntDoublePair(Int, Double);
         }
@@ -70,8 +68,7 @@ namespace osu_database_processor
         {
             if (ReadByte() != correctByte)
             {
-                Console.WriteLine("AssertByte failed: " + failMessage + " @" + (BaseStream.Position - 1));
-                return false;
+                throw new InvalidDataException("AssertByte failed: " + failMessage + " @" + (BaseStream.Position - 1));
             }
             return true;
         }
@@ -80,8 +77,7 @@ namespace osu_database_processor
         {
             if (!ReadString().Equals(correctString))
             {
-                Console.WriteLine("AssertString failed: " + failMessage + " @" + (BaseStream.Position - 1));
-                return false;
+                throw new InvalidDataException("AssertString failed: " + failMessage + " @" + (BaseStream.Position - 1));
             }
             return true;
         }
@@ -90,8 +86,7 @@ namespace osu_database_processor
         {
             if (ReadInt32() != correctInt)
             {
-                Console.WriteLine("AssertInt failed: " + failMessage + " @" + (BaseStream.Position - 1));
-                return false;
+                throw new InvalidDataException("AssertInt failed: " + failMessage + " @" + (BaseStream.Position - 1));
             }
             return true;
         }

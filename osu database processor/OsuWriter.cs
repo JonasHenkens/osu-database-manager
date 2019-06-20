@@ -27,7 +27,7 @@ namespace osu_database_processor
         {
             Write((byte)0x08);
             Write(value.Int);
-            Write((byte)0x08);
+            Write((byte)0x0d);
             Write(value.Double);
         }
 

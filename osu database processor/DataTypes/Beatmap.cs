@@ -85,6 +85,8 @@ namespace osu_database_processor.DataTypes
         public int LastModificationTime { get; private set; } // ?
         public byte ManiaScrollSpeed { get; private set; }
 
+        public int Version { get; private set; }
+
         public Beatmap(OsuReader o, int version)
         {
             ReadFromStream(o, version);
@@ -92,6 +94,8 @@ namespace osu_database_processor.DataTypes
 
         public void ReadFromStream(OsuReader o, int version)
         {
+            Version = version;
+
             SizeInBytes = o.ReadInt32();
             ArtistName = o.ReadString();
             ArtistNameUnicode = o.ReadString();
@@ -124,7 +128,6 @@ namespace osu_database_processor.DataTypes
                 OverallDifficultyB = o.ReadByte();
             }
 
-
             SliderVelocity = o.ReadDouble();
 
             // next part only present if version greater or equal to 20140609
@@ -155,8 +158,6 @@ namespace osu_database_processor.DataTypes
                     PairsMania.Add(o.ReadIntDoublePair());
                 } 
             }
-
-
 
             DrainTime = o.ReadInt32();
             TotalTime = o.ReadInt32();
@@ -200,6 +201,110 @@ namespace osu_database_processor.DataTypes
 
             LastModificationTime = o.ReadInt32();
             ManiaScrollSpeed = o.ReadByte();
+        }
+
+        public void WriteToStream(OsuWriter o)
+        {
+            o.Write(SizeInBytes);
+            o.Write(ArtistName);
+            o.Write(ArtistNameUnicode);
+            o.Write(SongTitle);
+            o.Write(SongTitleUnicode);
+            o.Write(CreatorName);
+            o.Write(Difficulty);
+            o.Write(AudioFileName);
+            o.Write(MD5Beatmap);
+            o.Write(NameDotOsuFile);
+            o.Write(RankedStatus);
+            o.Write(NumberOfHitcircles);
+            o.Write(NumberOfSliders);
+            o.Write(NumberOfSpinners);
+            o.Write(ModificationTime);
+
+            // next 4 are bytes for versions smaller than 20140609
+            if (Version >= 20140609)
+            {
+                o.Write(ApproacRate);
+                o.Write(CircleSize);
+                o.Write(HPDrain);
+                o.Write(OverallDifficulty);
+            }
+            else
+            {
+                o.Write(ApproacRateB);
+                o.Write(CircleSizeB);
+                o.Write(HPDrainB);
+                o.Write(OverallDifficultyB);
+            }
+
+            o.Write(SliderVelocity);
+
+            // next part only present if version greater or equal to 20140609
+            if (Version >= 20140609)
+            {
+                o.Write(AmountOfPairsStandard);
+                foreach (var pair in PairsStandard)
+                {
+                    o.Write(pair);
+                }
+                o.Write(AmountOfPairsTaiko);
+                foreach (var pair in PairsTaiko)
+                {
+                    o.Write(pair);
+                }
+                o.Write(AmountOfPairsCTB);
+                foreach (var pair in PairsCTB)
+                {
+                    o.Write(pair);
+                }
+                o.Write(AmountOfPairsMania);
+                foreach (var pair in PairsMania)
+                {
+                    o.Write(pair);
+                }
+            }
+
+            o.Write(DrainTime);
+            o.Write(TotalTime);
+            o.Write(TimeOfPreview);
+            o.Write(AmountOfTimingPoints);
+            foreach (var tp in TimingPoints)
+            {
+                o.Write(tp);
+            }
+            o.Write(BeatmapID);
+            o.Write(BeatmapSetID);
+            o.Write(ThreadID);
+            o.Write(GradeAchievedStandard);
+            o.Write(GradeAchievedTaiko);
+            o.Write(GradeAchievedCTB);
+            o.Write(GradeAchievedMania);
+            o.Write(LocalBeatmapOffset);
+            o.Write(StackLeniency);
+            o.Write(GameplayMode);
+            o.Write(SongSource);
+            o.Write(SongTags);
+            o.Write(OnlineOffset);
+            o.Write(Font);
+            o.Write(Unplayed);
+            o.Write(LastTimePlayed);
+            o.Write(Osz2);
+            o.Write(FolderName);
+            o.Write(LastTimeChecked);
+            o.Write(IgnoreBeatmapSound);
+            o.Write(IgnoreBeatmapSkin);
+            o.Write(DisableStoryboard);
+            o.Write(DisableVideo);
+            o.Write(VisualOverride);
+
+            // unknown short, only present if version less than 20140609
+            if (Version < 20140609)
+            {
+                o.Write(Unknown);
+            }
+
+            o.Write(LastModificationTime);
+            o.Write(ManiaScrollSpeed);
         }
     }
 }
