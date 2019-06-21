@@ -18,7 +18,7 @@ namespace osu_database_processor.DataTypes
         public short NumberOfHitValue5 { get; private set; } // Number of Katus in osu!Standard, 100's in Mania
         public short NumberOfMisses { get; private set; }
         public int ReplayScore { get; private set; }
-        public float MaxCombo { get; private set; }
+        public short MaxCombo { get; private set; }
         public bool PerfectCombo { get; private set; }
         public int Mods { get; private set; } // Bitwise combination of mods used. See Osr (file format) for more information.
         // string: should always be empty
@@ -51,11 +51,36 @@ namespace osu_database_processor.DataTypes
             PerfectCombo = o.ReadBoolean();
             Mods = o.ReadInt32();
             // string: should always be empty
-            o.AssertString("", "Score: String isn't empty");
+            o.AssertString(null, "Score: String isn't empty");
             Timestamp = o.ReadInt64();
             // int Constant, should always be 0xffffffff (-1)
             o.AssertInt(-1, "Score: int is not -1");
             OnlineScoreID = o.ReadInt64();
+        }
+
+        public void WriteToStream(OsuWriter o)
+        {
+            o.Write(Mode);
+            o.Write(Version);
+            o.Write(BeatmapMD5);
+            o.Write(PlayerName);
+            o.Write(ReplayMD5);
+            o.Write(NumberOfHitValue1);
+            o.Write(NumberOfHitValue2);
+            o.Write(NumberOfHitValue3);
+            o.Write(NumberOfHitValue4);
+            o.Write(NumberOfHitValue5);
+            o.Write(NumberOfMisses);
+            o.Write(ReplayScore);
+            o.Write(MaxCombo);
+            o.Write(PerfectCombo);
+            o.Write(Mods);
+            // string: should always be empty
+            o.Write((byte)0);
+            o.Write(Timestamp);
+            // int Constant, should always be 0xffffffff (-1)
+            o.Write(-1);
+            o.Write(OnlineScoreID);
         }
     }
 }

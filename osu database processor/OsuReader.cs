@@ -75,7 +75,7 @@ namespace osu_database_processor
 
         public bool AssertString(string correctString, string failMessage)
         {
-            if (!ReadString().Equals(correctString))
+            if (ReadString() != correctString)
             {
                 throw new InvalidDataException("AssertString failed: " + failMessage + " @" + (BaseStream.Position - 1));
             }

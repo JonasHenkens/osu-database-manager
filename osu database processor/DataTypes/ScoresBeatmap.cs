@@ -14,10 +14,10 @@ namespace osu_database_processor.DataTypes
         
         public ScoresBeatmap(OsuReader o)
         {
-            Initialize(o);
+            ReadFromStream(o);
         }
 
-        public void Initialize(OsuReader o)
+        public void ReadFromStream(OsuReader o)
         {
             MD5 = o.ReadString();
             NumberOfScores = o.ReadInt32();
@@ -25,6 +25,16 @@ namespace osu_database_processor.DataTypes
             for (int i = 0; i < NumberOfScores; i++)
             {
                 Scores.Add(new Score(o));
+            }
+        }
+
+        public void WriteToStream(OsuWriter o)
+        {
+            o.Write(MD5);
+            o.Write(NumberOfScores);
+            foreach (var score in Scores)
+            {
+                score.WriteToStream(o);
             }
         }
     }

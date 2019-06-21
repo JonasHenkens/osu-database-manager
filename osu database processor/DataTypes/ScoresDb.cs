@@ -26,7 +26,16 @@ namespace osu_database_processor.DataTypes
             {
                 Beatmaps.Add(new ScoresBeatmap(o));
             }
-            o.PrintPosition();
+        }
+
+        public void WriteToStream(OsuWriter o)
+        {
+            o.Write(Version);
+            o.Write(NumberOfBeatmaps);
+            foreach (var beatmap in Beatmaps)
+            {
+                beatmap.WriteToStream(o);
+            }
         }
     }
 }
