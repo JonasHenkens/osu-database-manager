@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace osu_database_processor.DataTypes
+namespace osu_database_processor.Components
 {
     class ScoresBeatmap
     {

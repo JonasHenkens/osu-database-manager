@@ -1,6 +1,4 @@
-﻿using osu_database_processor.DataTypes;
-using System;
-using System.IO;
+﻿using System;
 
 namespace osu_database_processor
 {

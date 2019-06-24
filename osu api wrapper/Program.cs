@@ -1,7 +1,4 @@
-﻿using osu_api_wrapper.DataTypes;
-using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System;
 
 namespace osu_api_wrapper
 {

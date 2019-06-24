@@ -1,4 +1,4 @@
-﻿using osu_database_processor.DataTypes;
+﻿using osu_database_processor.Components;
 using System;
 using System.Collections.Generic;
 using System.IO;

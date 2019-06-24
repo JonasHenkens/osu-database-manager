@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using osu_api_wrapper.Enum;
 using System;
-using static osu_api_wrapper.DataTypes.Converters;
+using static osu_api_wrapper.Components.Converters;
 
-namespace osu_api_wrapper.DataTypes
+namespace osu_api_wrapper.Components
 {
     class ScoreInfo
     {

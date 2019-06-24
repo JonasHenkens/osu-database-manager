@@ -1,8 +1,9 @@
-﻿using System;
+﻿using osu_database_processor.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace osu_database_processor.DataTypes
+namespace osu_database_processor.Databases
 {
     class PresenceDb
     {

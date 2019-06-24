@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace osu_api_wrapper.DataTypes
+namespace osu_api_wrapper.Components
 {
     class User
     {
