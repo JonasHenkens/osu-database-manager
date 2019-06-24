@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using osu_api_wrapper.Enum;
 using System;
+using static osu_api_wrapper.DataTypes.Converters;
 
 namespace osu_api_wrapper.DataTypes
 {
@@ -59,22 +60,5 @@ namespace osu_api_wrapper.DataTypes
         [JsonProperty("replay_available")]
         public bool ReplayAvailable { get; set; }
 
-        public class BoolConverter : JsonConverter
-        {
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                writer.WriteValue(((bool)value) ? 1 : 0);
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                return reader.Value.ToString() == "1";
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(bool);
-            }
-        }
     }
 }
