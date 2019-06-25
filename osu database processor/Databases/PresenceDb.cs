@@ -7,9 +7,15 @@ namespace osu_database_processor.Databases
 {
     class PresenceDb
     {
-        public int Version { get; private set; }
-        public int Amount { get; private set; }
-        public List<Person> People { get; private set; }
+        public int Version { get; set; }
+        public int Amount { get { return People.Count; } }
+        private List<Person> People;
+
+        public PresenceDb(int version)
+        {
+            Version = version;
+            People = new List<Person>();
+        }
 
         public PresenceDb(OsuReader o)
         {
@@ -19,9 +25,9 @@ namespace osu_database_processor.Databases
         public void ReadFromStream(OsuReader o)
         {
             Version = o.ReadInt32();
-            Amount = o.ReadInt32();
+            int amount = o.ReadInt32();
             People = new List<Person>();
-            for (int i = 0; i < Amount; i++)
+            for (int i = 0; i < amount; i++)
             {
                 People.Add(new Person(o));
             }
@@ -36,5 +42,24 @@ namespace osu_database_processor.Databases
                 person.WriteToStream(o);
             }
         }
+
+        public IReadOnlyList<Person> GetPeople()
+        {
+            return People.AsReadOnly();
+        }
+
+        public void AddPerson(Person person)
+        {
+            People.Add(person);
+            // TODO: check if person with same id (or name?) already exists
+        }
+
+        public bool RemovePerson(Person person)
+        {
+            return People.Remove(person);
+        }
+
+        // TODO: get Person by name/id
+
     }
 }

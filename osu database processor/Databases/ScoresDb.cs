@@ -7,11 +7,15 @@ namespace osu_database_processor.Databases
 {
     class ScoresDb
     {
-        public int Version { get; private set; }
-        public int NumberOfBeatmaps { get; private set; }
-        public List<ScoresBeatmap> Beatmaps { get; private set; }
+        public int Version { get; set; }
+        public int NumberOfBeatmaps { get { return Beatmaps.Count; } }
+        private List<BeatmapScores> Beatmaps;
 
-        public ScoresDb() { }
+        public ScoresDb(int version)
+        {
+            Version = version;
+            Beatmaps = new List<BeatmapScores>();
+        }
 
         public ScoresDb(OsuReader o)
         {
@@ -21,11 +25,11 @@ namespace osu_database_processor.Databases
         public void ReadFromStream(OsuReader o)
         {
             Version = o.ReadInt32();
-            NumberOfBeatmaps = o.ReadInt32();
-            Beatmaps = new List<ScoresBeatmap>();
-            for (int i = 0; i < NumberOfBeatmaps; i++)
+            int numberOfBeatmaps = o.ReadInt32();
+            Beatmaps = new List<BeatmapScores>();
+            for (int i = 0; i < numberOfBeatmaps; i++)
             {
-                Beatmaps.Add(new ScoresBeatmap(o));
+                Beatmaps.Add(new BeatmapScores(o));
             }
         }
 
@@ -38,5 +42,22 @@ namespace osu_database_processor.Databases
                 beatmap.WriteToStream(o);
             }
         }
+
+        public IReadOnlyList<BeatmapScores> GetBeatmapScores()
+        {
+            return Beatmaps.AsReadOnly();
+        }
+
+        public void AddBeatmapScores(BeatmapScores beatmapScores)
+        {
+            Beatmaps.Add(beatmapScores);
+            // TODO: check if beatmap with same MD5 already present
+        }
+
+        public bool RemoveBeatmapScores(BeatmapScores beatmapScores)
+        {
+            return Beatmaps.Remove(beatmapScores);
+        }
+        // TODO: get BeatmapScores by MD5
     }
 }

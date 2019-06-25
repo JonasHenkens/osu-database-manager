@@ -4,13 +4,17 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Collection
+    class Collection // TODO: properly implementing Collection
     {
-        public string Name { get; private set; }
-        public int NumberOfBeatmaps { get; private set; }
-        public string[] MD5s { get; private set; }
+        public string Name { get; set; }
+        public int NumberOfBeatmaps { get { return MD5s.Count; } }
+        private List<string> MD5s;
 
-        public Collection() { }
+        public Collection(string name)
+        {
+            Name = name;
+            MD5s = new List<string>();
+        }
 
         public Collection(OsuReader o)
         {
@@ -20,11 +24,11 @@ namespace osu_database_processor.Components
         public void ReadFromStream(OsuReader o)
         {
             Name = o.ReadString();
-            NumberOfBeatmaps = o.ReadInt32();
-            MD5s = new string[NumberOfBeatmaps];
-            for (int i = 0; i < NumberOfBeatmaps; i++)
+            int numberOfBeatmaps = o.ReadInt32();
+            MD5s = new List<string>();
+            for (int i = 0; i < numberOfBeatmaps; i++)
             {
-                MD5s[i] = o.ReadString();
+                MD5s.Add(o.ReadString());
             }
         }
 
@@ -38,5 +42,22 @@ namespace osu_database_processor.Components
             }
         }
 
+        public IReadOnlyList<string> getMD5s()
+        {
+            return MD5s.AsReadOnly();
+        }
+
+        public void AddBeatmap(string md5)
+        {
+            MD5s.Add(md5);
+            // TODO: check if MD5 already present
+        }
+
+        public bool RemoveBeatmap(string md5)
+        {
+            return MD5s.Remove(md5);
+        }
+
+        // TODO: AddBeatmap(Beatmap beatmap) and RemoveBeatmap(Beatmap beatmap)
     }
 }

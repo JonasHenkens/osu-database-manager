@@ -6,8 +6,8 @@ namespace osu_database_processor.Components
 {
     class IntDoublePair
     {
-        public int Int { get; private set; }
-        public double Double { get; private set; }
+        public int Int { get; set; }
+        public double Double { get; set; }
 
         public IntDoublePair(int intValue, double doubleValue)
         {

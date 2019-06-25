@@ -6,9 +6,9 @@ namespace osu_database_processor.Components
 {
     class Timingpoint
     {
-        public double BPM { get; private set; }
-        public double Offset { get; private set; } // in miliseconds
-        public bool NotInherited { get; private set; } // false if Timingpoint is inherited
+        public double BPM { get; set; }
+        public double Offset { get; set; } // in miliseconds
+        public bool NotInherited { get; set; } // false if Timingpoint is inherited
 
         public Timingpoint(double BPM, double offset, bool notInherited)
         {

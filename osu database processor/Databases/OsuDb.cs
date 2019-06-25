@@ -7,16 +7,25 @@ namespace osu_database_processor.Databases
 {
     class OsuDb
     {
-        public int Version { get; private set; }
+        public int Version { get; set; }
         public int FolderCount { get; private set; }
+        // TODO: implement editing of AccountUnlocked and UnlockDate
         public bool AccountUnlocked { get; private set; } // false when account is locked or banned
         public DateTime UnlockDate { get; private set; } // date account will be unlocked
-        public String PlayerName { get; private set; }
-        public int NumberOfBeatmaps { get; private set; }
-        public List<Beatmap> Beatmaps { get; private set; } // beatmaps
+        public String PlayerName { get; set; }
+        public int NumberOfBeatmaps { get { return Beatmaps.Count; } }
+        private List<Beatmap> Beatmaps;
         // Unknown, always seems to be 4
 
-        public OsuDb() { }
+        public OsuDb(int version, string playername)
+        {
+            Version = version;
+            FolderCount = 0;
+            AccountUnlocked = true;
+            UnlockDate = new DateTime();
+            PlayerName = playername;
+            Beatmaps = new List<Beatmap>();
+        }
 
         public OsuDb(OsuReader o)
         {
@@ -30,9 +39,9 @@ namespace osu_database_processor.Databases
             AccountUnlocked = o.ReadBoolean();
             UnlockDate = o.ReadDateTime();
             PlayerName = o.ReadString();
-            NumberOfBeatmaps = o.ReadInt32();
+            int numberOfBeatmaps = o.ReadInt32();
             Beatmaps = new List<Beatmap>();
-            for (int i = 0; i < NumberOfBeatmaps; i++)
+            for (int i = 0; i < numberOfBeatmaps; i++)
             {
                 Beatmaps.Add(new Beatmap(o, Version));
             }
@@ -53,5 +62,25 @@ namespace osu_database_processor.Databases
             }
             o.Write(4);
         }
+
+        public IReadOnlyList<Beatmap> GetBeatmaps()
+        {
+            return Beatmaps.AsReadOnly();
+        }
+
+        public void AddBeatmap(Beatmap beatmap)
+        {
+            Beatmaps.Add(beatmap);
+            // TODO: FolderCount++ if new folder OR add UpdateFolderCount method (checks amount of folders)
+            // TODO: check if MD5 already exists
+        }
+
+        public bool RemoveBeatmap(Beatmap beatmap)
+        {
+            return Beatmaps.Remove(beatmap);
+            // TODO: FolderCount-- if all from folder removed OR add UpdateFolderCount method (checks amount of folders)
+        }
+
+        // TODO: get Beatmap by MD5
     }
 }

@@ -4,10 +4,8 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Beatmap
+    class Beatmap // TODO: properly implementing Beatmap
     {
-
-        public Beatmap() { }
         public int SizeInBytes { get; private set; } // size of this entry
         public string ArtistName { get; private set; }
         public string ArtistNameUnicode { get; private set; }

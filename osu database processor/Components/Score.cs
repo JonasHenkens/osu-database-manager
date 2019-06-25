@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Score
+    class Score // TODO: properly implementing Score
     {
         public byte Mode { get; private set; } // 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
         public int Version { get; private set; } // osu version for this specific score
