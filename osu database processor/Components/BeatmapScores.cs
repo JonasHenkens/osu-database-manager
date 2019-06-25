@@ -47,15 +47,32 @@ namespace osu_database_processor.Components
             return Scores.AsReadOnly();
         }
 
-        public void AddScore(Score score)
+        public bool AddScore(Score score)
         {
-            Scores.Add(score);
-            // TODO: check if MD5 is correct
+            if (MD5 == score.BeatmapMD5 && !Scores.Contains(score))
+            {
+                Scores.Add(score);
+                return true;
+            }
+            return false;
         }
         
         public bool RemoveScore(Score score)
         {
             return Scores.Remove(score);
+        }
+
+        public bool MergeBeatmapScores(BeatmapScores beatmapScores)
+        {
+            if (MD5 == beatmapScores.MD5)
+            {
+                foreach (Score item in beatmapScores.GetScores())
+                {
+                    AddScore(item);
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

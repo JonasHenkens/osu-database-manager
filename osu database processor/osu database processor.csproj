@@ -6,8 +6,4 @@
     <RootNamespace>osu_database_processor</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Processing\" />
-  </ItemGroup>
-
 </Project>

@@ -10,10 +10,10 @@ namespace osu_database_processor.Components
         public string Name { get; private set; }
         public byte Country1 { get; private set; }
         public byte Country2 { get; private set; }
-        public byte Unknown { get; private set; } // most 0, regulary 4 and 96,  all found: 0 4 6 22 32 36 38 64 68 70 96 100 102
-        public long Unknown2 { get; private set; } // 8 unknown bytes
+        public byte Unknown { get; private set; } //TODO: unknown byte: most 0, regulary 4 and 96,  all found: 0 4 6 22 32 36 38 64 68 70 96 100 102
+        public long Unknown2 { get; private set; } // TODO: 8 unknown bytes
         public int Rank { get; private set; }
-        public long Unknown3 { get; private set; } // 8 unknown bytes
+        public long Unknown3 { get; private set; } // TODO: 8 unknown bytes
 
         public Person(OsuReader o)
         {

@@ -1,4 +1,5 @@
 ﻿using osu_database_processor.Components;
+using osu_database_processor.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,17 +49,76 @@ namespace osu_database_processor.Databases
             return Collections.AsReadOnly();
         }
 
-        public void AddCollection(Collection collection)
+        /// <summary>
+        /// Adds a collection if none with the same name exists.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns>True if collection is added.</returns>
+        public bool AddCollection(Collection collection)
         {
-            Collections.Add(collection);
-            // TODO: check if collection with same name exists
+            if (!IsNameUsed(collection.Name))
+            {
+                Collections.Add(collection);
+                return true;
+            }
+            return false;
         }
-        
+
+        public bool AddCollection(Collection collection, AddMode addMode)
+        {
+            if (IsNameUsed(collection.Name))
+            {
+                switch (addMode)
+                {
+                    case AddMode.Skip:
+                        return false;
+                    case AddMode.Merge:
+                        GetCollectionByName(collection.Name).MergeCollection(collection);
+                        return true;
+                    case AddMode.Overwrite:
+                        RemoveCollection(collection.Name);
+                        Collections.Add(collection);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            Collections.Add(collection);
+            return true;
+        }
+
         public bool RemoveCollection(Collection collection)
         {
             return Collections.Remove(collection);
         }
 
-        // TODO: add method to check if collection with name already exists
+        public bool RemoveCollection(string name)
+        {
+            return Collections.Remove(GetCollectionByName(name));
+        }
+
+        public bool IsNameUsed(string name)
+        {
+            foreach (Collection item in Collections)
+            {
+                if (item.Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Collection GetCollectionByName(string name)
+        {
+            foreach (Collection item in Collections)
+            {
+                if (item.Name == name)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
     }
 }

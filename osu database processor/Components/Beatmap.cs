@@ -6,20 +6,22 @@ namespace osu_database_processor.Components
 {
     class Beatmap // TODO: properly implementing Beatmap
     {
-        public int SizeInBytes { get; private set; } // size of this entry
-        public string ArtistName { get; private set; }
-        public string ArtistNameUnicode { get; private set; }
-        public string SongTitle { get; private set; }
-        public string SongTitleUnicode { get; private set; }
-        public string CreatorName { get; private set; }
-        public string Difficulty { get; private set; } // e.g. Hard, Insane, etc.
-        public string AudioFileName { get; private set; }
-        public string MD5Beatmap { get; private set; } // MD5 of beatmap
-        public string NameDotOsuFile { get; private set; } // name of .osu file
+        public int SizeInBytes { get; set; } // size of this entry
+        public string ArtistName { get; set; }
+        public string ArtistNameUnicode { get; set; }
+        public string SongTitle { get; set; }
+        public string SongTitleUnicode { get; set; }
+        public string CreatorName { get; set; }
+        public string Difficulty { get; set; } // e.g. Hard, Insane, etc.
+        public string AudioFileName { get; set; }
+        public string MD5Beatmap { get; set; } // MD5 of beatmap
+        public string NameDotOsuFile { get; set; } // name of .osu file
+        // TODO: enum
         public byte RankedStatus { get; private set; } // 0 = unknown, 1 = unsubmitted, 2 = pending/wip/graveyard, 3 = unused, 4 = ranked, 5 = approved, 6 = qualified, 7 = loved
         public short NumberOfHitcircles { get; private set; }
         public short NumberOfSliders { get; private set; } // note: will be present in every mode
         public short NumberOfSpinners { get; private set; } // note: will be present in every mode
+        // TODO: DateTime
         public long ModificationTime { get; private set; } // last modification time in windows ticks
 
         // next 4 are bytes for versions smaller than 20140609
@@ -35,7 +37,8 @@ namespace osu_database_processor.Components
         //
 
         public double SliderVelocity { get; private set; }
-
+        // TODO: convert to mods
+        // TODO: convert to lists
         // next part only present if version greater or equal to 20140609
         //  IntDoublePair: int is mod combination, double is star rating
         public int AmountOfPairsStandard { get; private set; }
@@ -52,16 +55,17 @@ namespace osu_database_processor.Components
         public int TotalTime { get; private set; } // in miliseconds
         public int TimeOfPreview { get; private set; } // in miliseconds, starting time of audiopreview
         public int AmountOfTimingPoints { get; private set; }
-        public List<Timingpoint> TimingPoints { get; private set; }
+        public List<Timingpoint> TimingPoints { get; private set; } // TODO: implement list correctly
         public int BeatmapID { get; private set; }
         public int BeatmapSetID { get; private set; }
         public int ThreadID { get; private set; }
-        public byte GradeAchievedStandard { get; private set; }
+        public byte GradeAchievedStandard { get; private set; } // TODO: is this same as (or simular to) ScoreRank? x4
         public byte GradeAchievedTaiko { get; private set; }
         public byte GradeAchievedCTB { get; private set; }
         public byte GradeAchievedMania { get; private set; }
         public short LocalBeatmapOffset { get; private set; }
         public float StackLeniency { get; private set; }
+        // TODO: convert to Mode enum
         public byte GameplayMode { get; private set; } // Osu gameplay mode. 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
         public string SongSource { get; private set; }
         public string SongTags { get; private set; }

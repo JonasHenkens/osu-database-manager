@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Collection // TODO: properly implementing Collection
+    class Collection
     {
         public string Name { get; set; }
         public int NumberOfBeatmaps { get { return MD5s.Count; } }
@@ -49,8 +49,10 @@ namespace osu_database_processor.Components
 
         public void AddBeatmap(string md5)
         {
-            MD5s.Add(md5);
-            // TODO: check if MD5 already present
+            if (!MD5s.Contains(md5))
+            {
+                MD5s.Add(md5);
+            }
         }
 
         public bool RemoveBeatmap(string md5)
@@ -58,6 +60,12 @@ namespace osu_database_processor.Components
             return MD5s.Remove(md5);
         }
 
-        // TODO: AddBeatmap(Beatmap beatmap) and RemoveBeatmap(Beatmap beatmap)
+        public void MergeCollection(Collection collection)
+        {
+            foreach (string item in collection.getMD5s())
+            {
+                AddBeatmap(item);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using osu_database_processor.Components;
+using osu_database_processor.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,16 +49,57 @@ namespace osu_database_processor.Databases
             return Beatmaps.AsReadOnly();
         }
 
-        public void AddBeatmapScores(BeatmapScores beatmapScores)
+        public bool AddBeatmapScores(BeatmapScores beatmapScores, AddMode addMode)
         {
+            if (IsBeatmapScoresPresent(beatmapScores.MD5))
+            {
+                switch (addMode)
+                {
+                    case AddMode.Skip:
+                        return false;
+                    case AddMode.Merge:
+                        GetBeatmapScoresByMD5(beatmapScores.MD5).MergeBeatmapScores(beatmapScores);
+                        return true;
+                    case AddMode.Overwrite:
+                        RemoveBeatmapScores(GetBeatmapScoresByMD5(beatmapScores.MD5));
+                        Beatmaps.Add(beatmapScores);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
             Beatmaps.Add(beatmapScores);
-            // TODO: check if beatmap with same MD5 already present
+            return true;
         }
 
         public bool RemoveBeatmapScores(BeatmapScores beatmapScores)
         {
             return Beatmaps.Remove(beatmapScores);
         }
-        // TODO: get BeatmapScores by MD5
+
+        public BeatmapScores GetBeatmapScoresByMD5(string md5)
+        {
+            foreach (BeatmapScores item in Beatmaps)
+            {
+                if (item.MD5 == md5)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public bool IsBeatmapScoresPresent(string md5)
+        {
+            foreach (BeatmapScores item in Beatmaps)
+            {
+                if (item.MD5 == md5)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
