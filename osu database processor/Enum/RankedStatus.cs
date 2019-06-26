@@ -4,7 +4,15 @@ using System.Text;
 
 namespace osu_database_processor.Enum
 {
-    class RankedStatus
+    public enum RankedStatus
     {
+        Unknown,
+        Unsubmitted,
+        pendingWipGraveyard,
+        Unused,
+        Ranked,
+        Approved,
+        Qualified,
+        Loved
     }
 }

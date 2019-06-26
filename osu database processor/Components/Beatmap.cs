@@ -1,10 +1,11 @@
-﻿using System;
+﻿using osu_database_processor.Enum;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Beatmap // TODO: properly implementing Beatmap
+    class Beatmap
     {
         public int SizeInBytes { get; set; } // size of this entry
         public string ArtistName { get; set; }
@@ -16,13 +17,11 @@ namespace osu_database_processor.Components
         public string AudioFileName { get; set; }
         public string MD5Beatmap { get; set; } // MD5 of beatmap
         public string NameDotOsuFile { get; set; } // name of .osu file
-        // TODO: enum
-        public byte RankedStatus { get; private set; } // 0 = unknown, 1 = unsubmitted, 2 = pending/wip/graveyard, 3 = unused, 4 = ranked, 5 = approved, 6 = qualified, 7 = loved
-        public short NumberOfHitcircles { get; private set; }
-        public short NumberOfSliders { get; private set; } // note: will be present in every mode
-        public short NumberOfSpinners { get; private set; } // note: will be present in every mode
-        // TODO: DateTime
-        public long ModificationTime { get; private set; } // last modification time in windows ticks
+        public RankedStatus RankedStatus { get; set; } // 0 = unknown, 1 = unsubmitted, 2 = pending/wip/graveyard, 3 = unused, 4 = ranked, 5 = approved, 6 = qualified, 7 = loved
+        public short NumberOfHitcircles { get; set; }
+        public short NumberOfSliders { get; set; } // note: will be present in every mode
+        public short NumberOfSpinners { get; set; } // note: will be present in every mode
+        public DateTime ModificationTime { get; private set; } // last modification time in windows ticks
 
         // next 4 are bytes for versions smaller than 20140609
         public float ApproacRate { get; private set; }
@@ -38,7 +37,7 @@ namespace osu_database_processor.Components
 
         public double SliderVelocity { get; private set; }
         // TODO: convert to mods
-        // TODO: convert to lists
+        // TODO: implement lists correctly
         // next part only present if version greater or equal to 20140609
         //  IntDoublePair: int is mod combination, double is star rating
         public int AmountOfPairsStandard { get; private set; }
@@ -59,14 +58,13 @@ namespace osu_database_processor.Components
         public int BeatmapID { get; private set; }
         public int BeatmapSetID { get; private set; }
         public int ThreadID { get; private set; }
-        public byte GradeAchievedStandard { get; private set; } // TODO: is this same as (or simular to) ScoreRank? x4
-        public byte GradeAchievedTaiko { get; private set; }
-        public byte GradeAchievedCTB { get; private set; }
-        public byte GradeAchievedMania { get; private set; }
+        public ScoreRank GradeAchievedStandard { get; private set; }
+        public ScoreRank GradeAchievedTaiko { get; private set; }
+        public ScoreRank GradeAchievedCTB { get; private set; }
+        public ScoreRank GradeAchievedMania { get; private set; }
         public short LocalBeatmapOffset { get; private set; }
         public float StackLeniency { get; private set; }
-        // TODO: convert to Mode enum
-        public byte GameplayMode { get; private set; } // Osu gameplay mode. 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
+        public Mode GameplayMode { get; private set; } // Osu gameplay mode. 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
         public string SongSource { get; private set; }
         public string SongTags { get; private set; }
         public short OnlineOffset { get; private set; }
@@ -108,11 +106,11 @@ namespace osu_database_processor.Components
             AudioFileName = o.ReadString();
             MD5Beatmap = o.ReadString();
             NameDotOsuFile = o.ReadString();
-            RankedStatus = o.ReadByte();
+            RankedStatus = (RankedStatus)o.ReadByte();
             NumberOfHitcircles = o.ReadInt16();
             NumberOfSliders = o.ReadInt16();
             NumberOfSpinners = o.ReadInt16();
-            ModificationTime = o.ReadInt64();
+            ModificationTime = new DateTime(o.ReadInt64());
 
             // next 4 are bytes for versions smaller than 20140609
             if (version >= 20140609)
@@ -173,13 +171,13 @@ namespace osu_database_processor.Components
             BeatmapID = o.ReadInt32();
             BeatmapSetID = o.ReadInt32();
             ThreadID = o.ReadInt32();
-            GradeAchievedStandard = o.ReadByte();
-            GradeAchievedTaiko = o.ReadByte();
-            GradeAchievedCTB = o.ReadByte();
-            GradeAchievedMania = o.ReadByte();
+            GradeAchievedStandard = (ScoreRank)o.ReadByte();
+            GradeAchievedTaiko = (ScoreRank)o.ReadByte();
+            GradeAchievedCTB = (ScoreRank)o.ReadByte();
+            GradeAchievedMania = (ScoreRank)o.ReadByte();
             LocalBeatmapOffset = o.ReadInt16();
             StackLeniency = o.ReadSingle();
-            GameplayMode = o.ReadByte();
+            GameplayMode = (Mode)o.ReadByte();
             SongSource = o.ReadString();
             SongTags = o.ReadString();
             OnlineOffset = o.ReadInt16();
@@ -203,6 +201,11 @@ namespace osu_database_processor.Components
 
             LastModificationTime = o.ReadInt32();
             ManiaScrollSpeed = o.ReadByte();
+
+            if (BeatmapSetID == 101796)
+            {
+                
+            }
         }
 
         public void WriteToStream(OsuWriter o)
@@ -217,7 +220,7 @@ namespace osu_database_processor.Components
             o.Write(AudioFileName);
             o.Write(MD5Beatmap);
             o.Write(NameDotOsuFile);
-            o.Write(RankedStatus);
+            o.Write((byte)RankedStatus);
             o.Write(NumberOfHitcircles);
             o.Write(NumberOfSliders);
             o.Write(NumberOfSpinners);
@@ -277,13 +280,13 @@ namespace osu_database_processor.Components
             o.Write(BeatmapID);
             o.Write(BeatmapSetID);
             o.Write(ThreadID);
-            o.Write(GradeAchievedStandard);
-            o.Write(GradeAchievedTaiko);
-            o.Write(GradeAchievedCTB);
-            o.Write(GradeAchievedMania);
+            o.Write((byte)GradeAchievedStandard);
+            o.Write((byte)GradeAchievedTaiko);
+            o.Write((byte)GradeAchievedCTB);
+            o.Write((byte)GradeAchievedMania);
             o.Write(LocalBeatmapOffset);
             o.Write(StackLeniency);
-            o.Write(GameplayMode);
+            o.Write((byte)GameplayMode);
             o.Write(SongSource);
             o.Write(SongTags);
             o.Write(OnlineOffset);

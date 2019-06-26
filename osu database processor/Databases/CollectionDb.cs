@@ -49,19 +49,9 @@ namespace osu_database_processor.Databases
             return Collections.AsReadOnly();
         }
 
-        /// <summary>
-        /// Adds a collection if none with the same name exists.
-        /// </summary>
-        /// <param name="collection"></param>
-        /// <returns>True if collection is added.</returns>
         public bool AddCollection(Collection collection)
         {
-            if (!IsNameUsed(collection.Name))
-            {
-                Collections.Add(collection);
-                return true;
-            }
-            return false;
+            return AddCollection(collection, AddMode.Skip);
         }
 
         public bool AddCollection(Collection collection, AddMode addMode)
@@ -94,7 +84,7 @@ namespace osu_database_processor.Databases
 
         public bool RemoveCollection(string name)
         {
-            return Collections.Remove(GetCollectionByName(name));
+            return RemoveCollection(GetCollectionByName(name));
         }
 
         public bool IsNameUsed(string name)

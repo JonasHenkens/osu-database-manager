@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace osu_api_wrapper.Enum
+namespace osu_database_processor.Enum
 {
     public enum ScoreRank
     {

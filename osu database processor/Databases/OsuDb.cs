@@ -1,4 +1,5 @@
 ﻿using osu_database_processor.Components;
+using osu_database_processor.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace osu_database_processor.Databases
     class OsuDb
     {
         public int Version { get; set; }
-        public int FolderCount { get; private set; }
+        public int FolderCount { get; set; } // actual amount of folders in songs directory, only used to detect changes, doesn't matter if wrong (osu gives warning and updates value)
         // TODO: implement editing of AccountUnlocked and UnlockDate
         public bool AccountUnlocked { get; private set; } // false when account is locked or banned
         public DateTime UnlockDate { get; private set; } // date account will be unlocked
@@ -68,11 +69,31 @@ namespace osu_database_processor.Databases
             return Beatmaps.AsReadOnly();
         }
 
-        public void AddBeatmap(Beatmap beatmap)
+        public bool AddBeatmap(Beatmap beatmap)
         {
+            return AddBeatmap(beatmap, AddMode.Skip);
+        }
+
+        public bool AddBeatmap(Beatmap beatmap, AddMode addMode)
+        {
+            if (IsBeatmapPresent(beatmap.MD5Beatmap))
+            {
+                switch (addMode)
+                {
+                    case AddMode.Skip:
+                        return false;
+                    case AddMode.Merge:
+                        return false;
+                    case AddMode.Overwrite:
+                        RemoveBeatmap(beatmap.MD5Beatmap);
+                        break;
+                    default:
+                        return false;
+                }
+            }
             Beatmaps.Add(beatmap);
+            return true;
             // TODO: FolderCount++ if new folder OR add UpdateFolderCount method (checks amount of folders)
-            // TODO: check if MD5 already exists
         }
 
         public bool RemoveBeatmap(Beatmap beatmap)
@@ -81,6 +102,34 @@ namespace osu_database_processor.Databases
             // TODO: FolderCount-- if all from folder removed OR add UpdateFolderCount method (checks amount of folders)
         }
 
-        // TODO: get Beatmap by MD5
+        public bool RemoveBeatmap(string md5)
+        {
+            return RemoveBeatmap(GetBeatmapByMD5(md5));
+        }
+
+        public Beatmap GetBeatmapByMD5(string md5)
+        {
+            foreach (Beatmap item in Beatmaps)
+            {
+                if (item.MD5Beatmap == md5)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public bool IsBeatmapPresent(string md5)
+        {
+            foreach (Beatmap item in Beatmaps)
+            {
+                if (item.MD5Beatmap == md5)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
