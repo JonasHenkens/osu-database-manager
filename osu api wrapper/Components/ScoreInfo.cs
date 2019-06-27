@@ -1,19 +1,22 @@
 ﻿using Newtonsoft.Json;
-using osu_api_wrapper.Enum;
 using System;
-using static osu_api_wrapper.Components.Converters;
 
 namespace osu_api_wrapper.Components
 {
     class ScoreInfo
     {
+        // get_user_best, get_user_recent
+        [JsonProperty("beatmap_id", NullValueHandling = NullValueHandling.Ignore)]
+        public int BeatmapId { get; set; }
+
         [JsonProperty("score_id")]
         public long ScoreId { get; set; }
 
         [JsonProperty("score")]
         public int ScoreScore { get; set; }
 
-        [JsonProperty("username")]
+        // get_scores
+        [JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
         public string Username { get; set; }
 
         [JsonProperty("count300")]
@@ -41,6 +44,7 @@ namespace osu_api_wrapper.Components
         [JsonProperty("perfect")]
         public bool Perfect { get; set; }
 
+        // always null for get_match
         [JsonProperty("enabled_mods")]
         public Mods EnabledMods { get; set; }
 
@@ -53,12 +57,25 @@ namespace osu_api_wrapper.Components
         [JsonProperty("rank")]
         public ScoreRank Rank { get; set; }
 
-        [JsonProperty("pp")]
+        // get_scores, get_user_best
+        [JsonProperty("pp", NullValueHandling = NullValueHandling.Ignore)]
         public float Pp { get; set; }
 
+        // get_scores
         [JsonConverter(typeof(BoolConverter))]
-        [JsonProperty("replay_available")]
+        [JsonProperty("replay_available", NullValueHandling = NullValueHandling.Ignore)]
         public bool ReplayAvailable { get; set; }
 
+        // get_match
+        [JsonProperty("slot", NullValueHandling = NullValueHandling.Ignore)]
+        public string Slot { get; set; }
+
+        // get_match
+        [JsonProperty("team", NullValueHandling = NullValueHandling.Ignore)]
+        public string Team { get; set; }
+
+        // get_match
+        [JsonProperty("pass", NullValueHandling = NullValueHandling.Ignore)]
+        public string Pass { get; set; }
     }
 }

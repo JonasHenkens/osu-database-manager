@@ -1,5 +1,4 @@
 ﻿using osu_database_processor.Components;
-using osu_database_processor.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
