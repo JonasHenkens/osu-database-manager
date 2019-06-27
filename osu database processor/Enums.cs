@@ -34,7 +34,7 @@ namespace osu_database_processor
         B,
         C,
         D,
-        Unused, // F rank?
+        F,
         Unplayed
     }
 

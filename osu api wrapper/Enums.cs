@@ -34,7 +34,7 @@ namespace osu_api_wrapper
         B,
         C,
         D,
-        Unused, // F rank?
+        F,
         Unplayed
     }
 

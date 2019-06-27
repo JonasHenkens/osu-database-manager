@@ -45,7 +45,7 @@ namespace osu_api_wrapper.Components
         public bool Perfect { get; set; }
 
         // always null for get_match
-        [JsonProperty("enabled_mods")]
+        [JsonProperty("enabled_mods", NullValueHandling = NullValueHandling.Ignore)]
         public Mods EnabledMods { get; set; }
 
         [JsonProperty("user_id")]

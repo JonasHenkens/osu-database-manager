@@ -16,7 +16,7 @@ namespace osu_api_wrapper.Components
         [JsonProperty("start_time")]
         public DateTime StartTime { get; set; }
 
-        [JsonProperty("end_time")]
+        [JsonProperty("end_time", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime EndTime { get; set; }
     }
 }
