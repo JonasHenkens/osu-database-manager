@@ -124,7 +124,6 @@ namespace osu_api_wrapper
         /// <returns>A byte array of the LZMA stream</returns>
         public static async Task<byte[]> GetReplay(Mode mode, int beatmapId, string user, UsernameType? type = null, Mods? mods = null)
         {
-            
             var call = BaseURL
                 .AppendPathSegment("get_replay")
                 .SetQueryParam("k", Key)

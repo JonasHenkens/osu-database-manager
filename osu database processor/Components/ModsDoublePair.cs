@@ -4,14 +4,14 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class IntDoublePair
+    class ModsDoublePair
     {
-        public int Int { get; set; }
+        public Mods Mods { get; set; }
         public double Double { get; set; }
 
-        public IntDoublePair(int intValue, double doubleValue)
+        public ModsDoublePair(Mods mods, double doubleValue)
         {
-            Int = intValue;
+            Mods = mods;
             Double = doubleValue;
         }
     }

@@ -23,10 +23,10 @@ namespace osu_database_processor
             }
         }
 
-        public void Write(IntDoublePair value)
+        public void Write(ModsDoublePair value)
         {
             Write((byte)0x08);
-            Write(value.Int);
+            Write((int)value.Mods);
             Write((byte)0x0d);
             Write(value.Double);
         }

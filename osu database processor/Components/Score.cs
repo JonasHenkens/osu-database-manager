@@ -70,7 +70,7 @@ namespace osu_database_processor.Components
             PerfectCombo = o.ReadBoolean();
             Mods = (Mods)o.ReadInt32();
             // string: should always be empty
-            o.AssertString(null, "Score: String isn't empty");
+            o.AssertStringIsNullOrEmpty("Score: String isn't null or empty");
             Timestamp = o.ReadInt64();
             // int Constant, should always be 0xffffffff (-1)
             o.AssertInt(-1, "Score: int is not -1");
@@ -100,6 +100,32 @@ namespace osu_database_processor.Components
             // int Constant, should always be 0xffffffff (-1)
             o.Write(-1);
             o.Write(OnlineScoreID);
+        }
+
+        public double getAccuracy()
+        {
+            switch (Mode)
+            {
+                case Mode.Standard:
+                    double numeratorS = 50 * NumberOfHitValue3 + 100 * NumberOfHitValue2 + 300 * NumberOfHitValue1;
+                    double denominatorS = 300 * (NumberOfHitValue1 + NumberOfHitValue2 + NumberOfHitValue3);
+                    return 100 * numeratorS / denominatorS;
+                case Mode.Taiko:
+                    double numeratorT = 0.5 * NumberOfHitValue1 + NumberOfHitValue2;
+                    double denominatorT = NumberOfHitValue1 + NumberOfHitValue2 + NumberOfMisses;
+                    return 100 * numeratorT / denominatorT;
+                case Mode.CTB:
+                    // fruit = 300, juice drop = 100, droplets = count50, missed drop = countgeki, missed droplets = countkatu, missed fruit = misses
+                    double numeratorC = NumberOfHitValue3 + NumberOfHitValue2 + NumberOfHitValue1;
+                    double denominatorC = NumberOfHitValue5 + NumberOfHitValue4 + NumberOfMisses + NumberOfHitValue3 + NumberOfHitValue2 + NumberOfHitValue1;
+                    return 100 * numeratorC / denominatorC;
+                case Mode.Mania:
+                    double numeratorM = 50 * NumberOfHitValue3 + 100 * NumberOfHitValue5 + 200 * NumberOfHitValue2 + 300 * (NumberOfHitValue1 + NumberOfHitValue4);
+                    double denominatorM = 300 * (NumberOfMisses + NumberOfHitValue3 + NumberOfHitValue5 + NumberOfHitValue2 + NumberOfHitValue1 + NumberOfHitValue4);
+                    return 100 * numeratorM / denominatorM;
+                default:
+                    throw new ArgumentException();
+            }
         }
     }
 }

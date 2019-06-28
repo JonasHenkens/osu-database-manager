@@ -20,71 +20,70 @@ namespace osu_database_processor.Components
         public short NumberOfHitcircles { get; set; }
         public short NumberOfSliders { get; set; } // note: will be present in every mode
         public short NumberOfSpinners { get; set; } // note: will be present in every mode
-        public DateTime ModificationTime { get; private set; } // last modification time in windows ticks
+        public DateTime ModificationTime { get; set; } // last modification time in windows ticks
 
         // next 4 are bytes for versions smaller than 20140609
-        public float ApproacRate { get; private set; }
-        public float CircleSize { get; private set; }
-        public float HPDrain { get; private set; }
-        public float OverallDifficulty { get; private set; }
+        public float ApproacRate { get; set; }
+        public float CircleSize { get; set; }
+        public float HPDrain { get; set; }
+        public float OverallDifficulty { get; set; }
         // for version smaller than 20140609
-        public byte ApproacRateB { get; private set; }
-        public byte CircleSizeB { get; private set; }
-        public byte HPDrainB { get; private set; }
-        public byte OverallDifficultyB { get; private set; }
+        public byte ApproacRateB { get; set; }
+        public byte CircleSizeB { get; set; }
+        public byte HPDrainB { get; set; }
+        public byte OverallDifficultyB { get; set; }
         //
 
-        public double SliderVelocity { get; private set; }
-        // TODO: convert to mods
-        // TODO: implement lists correctly
+        public double SliderVelocity { get; set; }
+
         // next part only present if version greater or equal to 20140609
-        //  IntDoublePair: int is mod combination, double is star rating
-        public int AmountOfPairsStandard { get; private set; }
-        public List<IntDoublePair> PairsStandard { get; private set; }
-        public int AmountOfPairsTaiko { get; private set; }
-        public List<IntDoublePair> PairsTaiko { get; private set; }
-        public int AmountOfPairsCTB { get; private set; }
-        public List<IntDoublePair> PairsCTB { get; private set; }
-        public int AmountOfPairsMania { get; private set; }
-        public List<IntDoublePair> PairsMania { get; private set; }
+        // double is star rating
+        public int AmountOfPairsStandard { get { return PairsStandard.Count; } }
+        public List<ModsDoublePair> PairsStandard { get; private set; }
+        public int AmountOfPairsTaiko { get { return PairsTaiko.Count; } }
+        public List<ModsDoublePair> PairsTaiko { get; private set; }
+        public int AmountOfPairsCTB { get { return PairsCTB.Count; } }
+        public List<ModsDoublePair> PairsCTB { get; private set; }
+        public int AmountOfPairsMania { get { return PairsMania.Count; } }
+        public List<ModsDoublePair> PairsMania { get; private set; }
         //
 
-        public int DrainTime { get; private set; } // in seconds
-        public int TotalTime { get; private set; } // in miliseconds
-        public int TimeOfPreview { get; private set; } // in miliseconds, starting time of audiopreview
-        public int AmountOfTimingPoints { get; private set; }
-        public List<Timingpoint> TimingPoints { get; private set; } // TODO: implement list correctly
-        public int BeatmapID { get; private set; }
-        public int BeatmapSetID { get; private set; }
-        public int ThreadID { get; private set; }
-        public ScoreRank GradeAchievedStandard { get; private set; }
-        public ScoreRank GradeAchievedTaiko { get; private set; }
-        public ScoreRank GradeAchievedCTB { get; private set; }
-        public ScoreRank GradeAchievedMania { get; private set; }
-        public short LocalBeatmapOffset { get; private set; }
-        public float StackLeniency { get; private set; }
-        public Mode GameplayMode { get; private set; } // Osu gameplay mode. 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
-        public string SongSource { get; private set; }
-        public string SongTags { get; private set; }
-        public short OnlineOffset { get; private set; }
-        public string Font { get; private set; }
-        public bool Unplayed { get; private set; }
-        public long LastTimePlayed { get; private set; }
-        public bool Osz2 { get; private set; } // is the beatmap osz2
-        public string FolderName { get; private set; } // relative to songs folder
-        public long LastTimeChecked { get; private set; } // last time the beatmap was checked against osu! repository
-        public bool IgnoreBeatmapSound { get; private set; }
-        public bool IgnoreBeatmapSkin { get; private set; }
-        public bool DisableStoryboard { get; private set; }
-        public bool DisableVideo { get; private set; }
-        public bool VisualOverride { get; private set; }
+        public int DrainTime { get; set; } // in seconds
+        public int TotalTime { get; set; } // in miliseconds
+        public int TimeOfPreview { get; set; } // in miliseconds, starting time of audiopreview
+        public int AmountOfTimingPoints { get { return TimingPoints.Count; } }
+        public List<Timingpoint> TimingPoints { get; private set; }
+        public int BeatmapID { get; set; }
+        public int BeatmapSetID { get; set; }
+        public int ThreadID { get; set; }
+        public ScoreRank GradeAchievedStandard { get; set; }
+        public ScoreRank GradeAchievedTaiko { get; set; }
+        public ScoreRank GradeAchievedCTB { get; set; }
+        public ScoreRank GradeAchievedMania { get; set; }
+        public short LocalBeatmapOffset { get; set; }
+        public float StackLeniency { get; set; }
+        public Mode GameplayMode { get; set; }
+        public string SongSource { get; set; }
+        public string SongTags { get; set; }
+        public short OnlineOffset { get; set; }
+        public string Font { get; set; }
+        public bool Unplayed { get; set; }
+        public long LastTimePlayed { get; set; }
+        public bool Osz2 { get; set; } // is the beatmap osz2
+        public string FolderName { get; set; } // relative to songs folder
+        public long LastTimeChecked { get; set; } // last time the beatmap was checked against osu! repository
+        public bool IgnoreBeatmapSound { get; set; }
+        public bool IgnoreBeatmapSkin { get; set; }
+        public bool DisableStoryboard { get; set; }
+        public bool DisableVideo { get; set; }
+        public bool VisualOverride { get; set; }
 
-        public short Unknown { get; private set; } // only present if version less than 20140609
+        public short Unknown { get; set; } // only present if version less than 20140609
 
-        public int LastModificationTime { get; private set; } // ?
-        public byte ManiaScrollSpeed { get; private set; }
+        public int LastModificationTime { get; set; } // ?
+        public byte ManiaScrollSpeed { get; set; }
 
-        public int Version { get; private set; }
+        public int Version { get; set; }
 
         public Beatmap(OsuReader o, int version)
         {
@@ -132,27 +131,27 @@ namespace osu_database_processor.Components
             // next part only present if version greater or equal to 20140609
             if (version >= 20140609)
             {
-                AmountOfPairsStandard = o.ReadInt32();
-                PairsStandard = new List<IntDoublePair>();
-                for (int i = 0; i < AmountOfPairsStandard; i++)
+                int amountOfPairsStandard = o.ReadInt32();
+                PairsStandard = new List<ModsDoublePair>();
+                for (int i = 0; i < amountOfPairsStandard; i++)
                 {
                     PairsStandard.Add(o.ReadIntDoublePair());
                 }
-                AmountOfPairsTaiko = o.ReadInt32();
-                PairsTaiko = new List<IntDoublePair>();
-                for (int i = 0; i < AmountOfPairsTaiko; i++)
+                int amountOfPairsTaiko = o.ReadInt32();
+                PairsTaiko = new List<ModsDoublePair>();
+                for (int i = 0; i < amountOfPairsTaiko; i++)
                 {
                     PairsTaiko.Add(o.ReadIntDoublePair());
                 }
-                AmountOfPairsCTB = o.ReadInt32();
-                PairsCTB = new List<IntDoublePair>();
-                for (int i = 0; i < AmountOfPairsCTB; i++)
+                int amountOfPairsCTB = o.ReadInt32();
+                PairsCTB = new List<ModsDoublePair>();
+                for (int i = 0; i < amountOfPairsCTB; i++)
                 {
                     PairsCTB.Add(o.ReadIntDoublePair());
                 }
-                AmountOfPairsMania = o.ReadInt32();
-                PairsMania = new List<IntDoublePair>();
-                for (int i = 0; i < AmountOfPairsMania; i++)
+                int amountOfPairsMania = o.ReadInt32();
+                PairsMania = new List<ModsDoublePair>();
+                for (int i = 0; i < amountOfPairsMania; i++)
                 {
                     PairsMania.Add(o.ReadIntDoublePair());
                 } 
@@ -161,9 +160,9 @@ namespace osu_database_processor.Components
             DrainTime = o.ReadInt32();
             TotalTime = o.ReadInt32();
             TimeOfPreview = o.ReadInt32();
-            AmountOfTimingPoints = o.ReadInt32();
+            int amountOfTimingPoints = o.ReadInt32();
             TimingPoints = new List<Timingpoint>();
-            for (int i = 0; i < AmountOfTimingPoints; i++)
+            for (int i = 0; i < amountOfTimingPoints; i++)
             {
                 TimingPoints.Add(o.ReadTimingpoint());
             }

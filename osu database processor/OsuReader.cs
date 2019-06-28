@@ -21,9 +21,9 @@ namespace osu_database_processor
             int shift = 0;
             while (true)
             {
-                byte Byte = ReadByte();
-                result |= (ulong)(0x7F & Byte) << shift;
-                if ((0x80 & Byte) == 0) break;
+                byte byteVal = ReadByte();
+                result |= (ulong)(0x7F & byteVal) << shift;
+                if ((0x80 & byteVal) == 0) break;
                 shift += 7;
             }
             return result;
@@ -31,8 +31,8 @@ namespace osu_database_processor
 
         public override string ReadString()
         {
-            byte Byte = ReadByte();
-            switch (Byte)
+            byte byteVal = ReadByte();
+            switch (byteVal)
             {
                 case 0x0b:
                     return base.ReadString();
@@ -42,21 +42,21 @@ namespace osu_database_processor
             throw new InvalidDataException("ReadString: first byte wrong @" + (BaseStream.Position - 1));
         }
 
-        public IntDoublePair ReadIntDoublePair()
+        public ModsDoublePair ReadIntDoublePair()
         {
             if (!ReadByte().Equals(0x08)) throw new InvalidDataException("ReadIntDoublePair: first byte wrong @" + (BaseStream.Position - 1));
-            int Int = ReadInt32();
+            Mods mods = (Mods)ReadInt32();
             if (!ReadByte().Equals(0x0d)) throw new InvalidDataException("ReadIntDoublePair: second byte wrong @" + (BaseStream.Position - 1));
-            double Double = ReadDouble();
-            return new IntDoublePair(Int, Double);
+            double doubleValue = ReadDouble();
+            return new ModsDoublePair(mods, doubleValue);
         }
 
         public Timingpoint ReadTimingpoint()
         {
-            double BPM = ReadDouble();
-            double Offset = ReadDouble();
-            bool Bool = ReadBoolean();
-            return new Timingpoint(BPM, Offset, Bool);
+            double bpm = ReadDouble();
+            double offset = ReadDouble();
+            bool notInherited = ReadBoolean();
+            return new Timingpoint(bpm, offset, notInherited);
         }
 
         public DateTime ReadDateTime()
@@ -73,11 +73,11 @@ namespace osu_database_processor
             return true;
         }
 
-        public bool AssertString(string correctString, string failMessage)
+        public bool AssertStringIsNullOrEmpty(string failMessage)
         {
-            if (ReadString() != correctString)
+            if (!string.IsNullOrEmpty((ReadString())))
             {
-                throw new InvalidDataException("AssertString failed: " + failMessage + " @" + (BaseStream.Position - 1));
+                throw new InvalidDataException("AssertStringIsNullOrEmpty failed: " + failMessage + " @" + (BaseStream.Position - 1));
             }
             return true;
         }
