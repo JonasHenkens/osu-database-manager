@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_api_wrapper.Components
 {
-    class Beatmap
+    public class Beatmap
     {
         [JsonProperty("approved")]
         public RankedStatusAPI Approved { get; set; }

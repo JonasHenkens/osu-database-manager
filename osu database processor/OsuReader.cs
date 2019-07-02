@@ -6,7 +6,7 @@ using System.Text;
 
 namespace osu_database_processor
 {
-    class OsuReader : BinaryReader
+    public class OsuReader : BinaryReader
     {
         public OsuReader(Stream input) : base(input) { }
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_api_wrapper.Components
 {
-    class Event
+    public class Event
     {
         [JsonProperty("display_html")]
         public string DisplayHtml { get; set; }

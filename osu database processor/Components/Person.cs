@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Person // TODO: properly implementing Person
+    public class Person
     {
         public int PlayerId { get; private set; }
         public string Name { get; private set; }

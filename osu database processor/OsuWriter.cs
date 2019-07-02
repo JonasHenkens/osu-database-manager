@@ -6,7 +6,7 @@ using System.Text;
 
 namespace osu_database_processor
 {
-    class OsuWriter : BinaryWriter
+    public class OsuWriter : BinaryWriter
     {
         public OsuWriter(Stream output) : base(output) { }
 

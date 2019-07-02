@@ -39,7 +39,7 @@ namespace osu_api_wrapper
     }
 
     [Flags]
-    enum Mods
+    public enum Mods
     {
         None = 0,
         NoFail = 1,

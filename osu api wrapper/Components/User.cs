@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_api_wrapper.Components
 {
-    class User
+    public class User
     {
         [JsonProperty("user_id")]
         public int UserId { get; set; }

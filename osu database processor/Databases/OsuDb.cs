@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_database_processor.Databases
 {
-    class OsuDb
+    public class OsuDb
     {
         public int Version { get; set; }
         public int FolderCount { get; set; } // actual amount of folders in songs directory, only used to detect changes, doesn't matter if wrong (osu gives warning and updates value)

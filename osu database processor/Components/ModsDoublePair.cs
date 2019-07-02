@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class ModsDoublePair
+    public class ModsDoublePair
     {
         public Mods Mods { get; set; }
         public double Double { get; set; }

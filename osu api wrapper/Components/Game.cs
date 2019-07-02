@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_api_wrapper.Components
 {
-    class Game
+    public class Game
     {
         [JsonProperty("game_id")]
         public int GameId { get; set; }

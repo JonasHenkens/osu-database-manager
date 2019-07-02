@@ -3,7 +3,7 @@ using System;
 
 namespace osu_api_wrapper.Components
 {
-    class ScoreInfo
+    public class ScoreInfo
     {
         // get_user_best, get_user_recent
         [JsonProperty("beatmap_id", NullValueHandling = NullValueHandling.Ignore)]

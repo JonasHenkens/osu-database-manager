@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Collection
+    public class Collection
     {
         public string Name { get; set; }
         public int NumberOfBeatmaps { get { return MD5s.Count; } }

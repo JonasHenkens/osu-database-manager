@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace osu_api_wrapper
 {
-    class APICaller
+    public class APICaller
     {
         public static string Key { private get; set; }
         static string BaseURL = "https://osu.ppy.sh/api";

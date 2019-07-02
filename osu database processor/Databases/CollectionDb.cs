@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_database_processor.Databases
 {
-    class CollectionDb
+    public class CollectionDb
     {
         public int Version { get; set; }
         public int NumberOfCollections { get { return Collections.Count; } }

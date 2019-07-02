@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_database_processor.Databases
 {
-    class PresenceDb
+    public class PresenceDb
     {
         public int Version { get; set; }
         public int Amount { get { return People.Count; } }

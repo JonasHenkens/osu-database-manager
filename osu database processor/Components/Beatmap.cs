@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Beatmap
+    public class Beatmap
     {
         public int SizeInBytes { get; set; } // size of this entry
         public string ArtistName { get; set; }

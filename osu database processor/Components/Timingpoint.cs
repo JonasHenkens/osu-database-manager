@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Timingpoint
+    public class Timingpoint
     {
         public double BPM { get; set; }
         public double Offset { get; set; } // in miliseconds

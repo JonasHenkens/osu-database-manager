@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osu_database_processor.Databases
 {
-    class ScoresDb
+    public class ScoresDb
     {
         public int Version { get; set; }
         public int NumberOfBeatmaps { get { return Beatmaps.Count; } }

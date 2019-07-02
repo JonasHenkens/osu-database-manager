@@ -4,7 +4,7 @@ using System.Text;
 
 namespace osu_database_processor.Components
 {
-    class Score
+    public class Score
     {
         public Mode Mode { get; set; } // 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
         public int Version { get; set; } // osu version for this specific score
@@ -102,7 +102,7 @@ namespace osu_database_processor.Components
             o.Write(OnlineScoreID);
         }
 
-        public double getAccuracy()
+        public double GetAccuracy()
         {
             switch (Mode)
             {
