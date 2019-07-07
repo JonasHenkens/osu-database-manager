@@ -1,6 +1,7 @@
 ﻿using osu_database_processor.Components;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace osu_database_processor.Databases
@@ -22,14 +23,29 @@ namespace osu_database_processor.Databases
             ReadFromStream(o);
         }
 
+        public PresenceDb(string path)
+        {
+            OsuReader or = new OsuReader(new FileStream(path, FileMode.Open));
+            ReadFromStream(or);
+            or.Close();
+        }
+
         public void ReadFromStream(OsuReader o)
         {
-            Version = o.ReadInt32();
-            int amount = o.ReadInt32();
-            People = new List<Person>();
-            for (int i = 0; i < amount; i++)
+            try
             {
-                People.Add(new Person(o));
+                Version = o.ReadInt32();
+                int amount = o.ReadInt32();
+                People = new List<Person>();
+                for (int i = 0; i < amount; i++)
+                {
+                    People.Add(new Person(o));
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(InvalidDataException)) throw;
+                else throw new InvalidDataException("Invalid data", e);
             }
         }
 

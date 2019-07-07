@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace osu_api_wrapper
@@ -14,11 +15,29 @@ namespace osu_api_wrapper
     public class APICaller
     {
         public static string Key { private get; set; }
-        static string BaseURL = "https://osu.ppy.sh/api";
+        public static string BaseURL { get; set; } = "https://osu.ppy.sh/api";
+        public static int QueueSize { get; set; }
+
+        public static int RateLimitPerMin { get; set; } = 1000;
+        private static readonly object Lock = new object();
+
+        private static readonly object LockReplay = new object();
+        public static int RateLimitPerMinReplay { get; set; } = 10;
 
         // await GetBeatmaps(since: null, beatmapsetId: null, beatmapId: null, user: null, type: null, mode: null, includeConverted: null, hash: null, limit: null, mods: null);
         public static async Task<List<Beatmap>> GetBeatmaps(DateTime? since = null, int? beatmapsetId = null, int? beatmapId = null, int? user = null, UsernameType? type = null, Mode? mode = null, bool? includeConverted = null, string hash = null, [Range(0, 500)] int? limit = null, Mods? mods = null)
         {
+            QueueSize++;
+            lock (Lock)
+            {
+                if (RateLimitPerMin > 0)
+                {
+                    int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
+
             var call = BaseURL
                 .AppendPathSegment("get_beatmaps")
                 .SetQueryParam("k", Key);
@@ -40,6 +59,16 @@ namespace osu_api_wrapper
 
         public static async Task<List<User>> GetUser(string user, Mode? mode = null, UsernameType? type = null, int? eventDays = null)
         {
+            QueueSize++;
+            lock (Lock)
+            {
+                if (RateLimitPerMin > 0)
+                {
+                    int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
 
             var call = BaseURL
                 .AppendPathSegment("get_user")
@@ -56,6 +85,17 @@ namespace osu_api_wrapper
 
         public static async Task<List<ScoreInfo>> GetScores(int beatmapId, string user = null, UsernameType? type = null, Mode? mode = null, Mods? mods = null, int? limit = null)
         {
+            QueueSize++;
+            lock (Lock)
+            {
+                if (RateLimitPerMin > 0)
+                {
+                    int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
+
             var call = BaseURL
                 .AppendPathSegment("get_scores")
                 .SetQueryParam("k", Key)
@@ -73,6 +113,17 @@ namespace osu_api_wrapper
 
         public static async Task<List<ScoreInfo>> GetUserBest(string user, UsernameType? type = null, Mode? mode = null, int? limit = null)
         {
+            QueueSize++;
+            lock (Lock)
+            {
+                if (RateLimitPerMin > 0)
+                {
+                    int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
+
             var call = BaseURL
                 .AppendPathSegment("get_user_best")
                 .SetQueryParam("k", Key)
@@ -88,6 +139,17 @@ namespace osu_api_wrapper
 
         public static async Task<List<ScoreInfo>> GetUserRecent(string user, UsernameType? type = null, Mode? mode = null, int? limit = null)
         {
+            QueueSize++;
+            lock (Lock)
+            {
+                if (RateLimitPerMin > 0)
+                {
+                    int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
+
             var call = BaseURL
                 .AppendPathSegment("get_user_recent")
                 .SetQueryParam("k", Key)
@@ -103,6 +165,17 @@ namespace osu_api_wrapper
 
         public static async Task<MatchInfo> GetMatch(int matchId)
         {
+            QueueSize++;
+            lock (Lock)
+            {
+                if (RateLimitPerMin > 0)
+                {
+                    int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
+
             var call = BaseURL
                 .AppendPathSegment("get_match")
                 .SetQueryParam("k", Key)
@@ -124,6 +197,26 @@ namespace osu_api_wrapper
         /// <returns>A byte array of the LZMA stream</returns>
         public static async Task<byte[]> GetReplay(Mode mode, int beatmapId, string user, UsernameType? type = null, Mods? mods = null)
         {
+            QueueSize++;
+            lock (LockReplay)
+            {
+                lock (Lock)
+                {
+                    if (RateLimitPerMin > 0)
+                    {
+                        int delay = (60000 + RateLimitPerMin - 1) / RateLimitPerMin;
+                        Thread.Sleep(delay);
+                    }
+                }
+
+                if (RateLimitPerMinReplay > 0)
+                {
+                    int delay = (60000 + RateLimitPerMinReplay - 1) / RateLimitPerMinReplay;
+                    Thread.Sleep(delay);
+                }
+            }
+            QueueSize--;
+
             var call = BaseURL
                 .AppendPathSegment("get_replay")
                 .SetQueryParam("k", Key)

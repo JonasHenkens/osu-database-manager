@@ -88,5 +88,19 @@ namespace osu_database_processor.Components
             return topScore;
         }
 
+        public Score GetHighestScore(string name)
+        {
+            Score topScore = null;
+            foreach (Score score in Scores)
+            {
+                if (score.PlayerName == name)
+                {
+                    if (topScore == null) topScore = score;
+                    else if (score.ReplayScore > topScore.ReplayScore) topScore = score;
+                }
+            }
+            return topScore;
+        }
+
     }
 }

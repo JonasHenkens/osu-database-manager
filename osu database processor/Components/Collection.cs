@@ -42,7 +42,7 @@ namespace osu_database_processor.Components
             }
         }
 
-        public IReadOnlyList<string> getMD5s()
+        public IReadOnlyList<string> GetMD5s()
         {
             return MD5s.AsReadOnly();
         }
@@ -62,7 +62,7 @@ namespace osu_database_processor.Components
 
         public void MergeCollection(Collection collection)
         {
-            foreach (string item in collection.getMD5s())
+            foreach (string item in collection.GetMD5s())
             {
                 AddBeatmap(item);
             }

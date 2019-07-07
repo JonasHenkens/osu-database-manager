@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu database processor", "osu database processor\osu database processor.csproj", "{5E4B5F16-9051-467F-B490-A37957A0438D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu api wrapper", "osu api wrapper\osu api wrapper.csproj", "{8869A299-3EFE-420A-9509-559938BBB790}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu api wrapper", "osu api wrapper\osu api wrapper.csproj", "{8869A299-3EFE-420A-9509-559938BBB790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu database manager", "osu database manager\osu database manager.csproj", "{CEFB4098-F875-4ADF-86B8-CF11A39670C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8869A299-3EFE-420A-9509-559938BBB790}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8869A299-3EFE-420A-9509-559938BBB790}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8869A299-3EFE-420A-9509-559938BBB790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEFB4098-F875-4ADF-86B8-CF11A39670C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEFB4098-F875-4ADF-86B8-CF11A39670C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEFB4098-F875-4ADF-86B8-CF11A39670C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEFB4098-F875-4ADF-86B8-CF11A39670C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

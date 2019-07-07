@@ -1,6 +1,7 @@
 ﻿using osu_database_processor.Components;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace osu_database_processor.Databases
@@ -32,20 +33,35 @@ namespace osu_database_processor.Databases
             ReadFromStream(o);
         }
 
+        public OsuDb(string path)
+        {
+            OsuReader or = new OsuReader(new FileStream(path, FileMode.Open));
+            ReadFromStream(or);
+            or.Close();
+        }
+
         public void ReadFromStream(OsuReader o)
         {
-            Version = o.ReadInt32();
-            FolderCount = o.ReadInt32();
-            AccountUnlocked = o.ReadBoolean();
-            UnlockDate = o.ReadDateTime();
-            PlayerName = o.ReadString();
-            int numberOfBeatmaps = o.ReadInt32();
-            Beatmaps = new List<Beatmap>();
-            for (int i = 0; i < numberOfBeatmaps; i++)
+            try
             {
-                Beatmaps.Add(new Beatmap(o, Version));
+                Version = o.ReadInt32();
+                FolderCount = o.ReadInt32();
+                AccountUnlocked = o.ReadBoolean();
+                UnlockDate = o.ReadDateTime();
+                PlayerName = o.ReadString();
+                int numberOfBeatmaps = o.ReadInt32();
+                Beatmaps = new List<Beatmap>();
+                for (int i = 0; i < numberOfBeatmaps; i++)
+                {
+                    Beatmaps.Add(new Beatmap(o, Version));
+                }
+                o.AssertInt(4, "OsuDb: Unknown is not 4");
             }
-            o.AssertInt(4, "OsuDb: Unknown is not 4");
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(InvalidDataException)) throw;
+                else throw new InvalidDataException("Invalid data", e);
+            }
         }
 
         public void WriteToStream(OsuWriter o)

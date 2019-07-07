@@ -1,6 +1,7 @@
 ﻿using osu_database_processor.Components;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace osu_database_processor.Databases
@@ -17,6 +18,13 @@ namespace osu_database_processor.Databases
             Collections = new List<Collection>();
         }
 
+        public CollectionDb(string path)
+        {
+            OsuReader or = new OsuReader(new FileStream(path, FileMode.Open));
+            ReadFromStream(or);
+            or.Close();
+        }
+
         public CollectionDb(OsuReader o)
         {
             ReadFromStream(o);
@@ -24,12 +32,20 @@ namespace osu_database_processor.Databases
 
         public void ReadFromStream(OsuReader o)
         {
-            Version = o.ReadInt32();
-            int numberOfCollections = o.ReadInt32();
-            Collections = new List<Collection>();
-            for (int i = 0; i < numberOfCollections; i++)
+            try
             {
-                Collections.Add(new Collection(o));
+                Version = o.ReadInt32();
+                int numberOfCollections = o.ReadInt32();
+                Collections = new List<Collection>();
+                for (int i = 0; i < numberOfCollections; i++)
+                {
+                    Collections.Add(new Collection(o));
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(InvalidDataException)) throw;
+                else throw new InvalidDataException("Invalid data", e);
             }
         }
 
@@ -41,6 +57,23 @@ namespace osu_database_processor.Databases
             {
                 item.WriteToSteam(o);
             }
+        }
+
+        public string WriteToFile(string path)
+        {
+            string newPath = path;
+            int i = 2;
+            while (File.Exists(newPath))
+            {
+                string suffix = " (" + i + ")";
+                newPath = Path.Combine(Path.GetDirectoryName(path), string.Concat(Path.GetFileNameWithoutExtension(path), suffix, Path.GetExtension(path)));
+                i++;
+            }
+            OsuWriter o = new OsuWriter(new FileStream(newPath, FileMode.CreateNew));
+            WriteToStream(o);
+            o.Flush();
+            o.Close();
+            return newPath;
         }
 
         public IReadOnlyList<Collection> GetCollections()
@@ -108,6 +141,14 @@ namespace osu_database_processor.Databases
                 }
             }
             return null;
+        }
+
+        public void Merge(CollectionDb collectionDb, AddMode addMode)
+        {
+            foreach (Collection collection in collectionDb.Collections)
+            {
+                AddCollection(collection, addMode);
+            }
         }
     }
 }
