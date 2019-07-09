@@ -6,6 +6,7 @@ using System.IO;
 using osu_database_processor;
 using CommandLine.Text;
 using osu_database_processor.Components;
+using osu_database_manager.Tools;
 
 namespace osu_database_manager
 {
@@ -26,16 +27,16 @@ namespace osu_database_manager
 
         }
 
-        [Verb("collectionsAcc", HelpText = "ignore this")]
+        [Verb("collectionsacc", HelpText = "Generate collections based on accuracy")]
         class GenColByAccOptions
         {
-            [Usage(ApplicationAlias = "osudatabasemanager")]
+            [Usage(ApplicationAlias = "OsuDatabaseManager")]
             public static IEnumerable<Example> Examples
             {
                 get
                 {
                     return new List<Example>() {
-                        new Example("Generate collections based on accuracy (0-<80, 80-<90, 90-<100, 100)", new GenColByAccOptions {Seperators = new[] { 80, 90, 100 }, OsuPath = @"C:\osu!" , OutputFile = @"C:\collection.db"})
+                        new Example("Generate collections based on accuracy (0 - <90, 90 - <100, 100)", new GenColByAccOptions {Seperators = new[] { 90, 100 }, OsuPath = @"C:\osu!" , OutputFile = @"C:\collection.db"})
                     };
                 }
             }
@@ -53,9 +54,10 @@ namespace osu_database_manager
             [Option("seperators",
                 Default = new[] { 88, 92, 95, 97, 98, 99, 100 },
                 HelpText = "Values that seperate each collection. Collections go from value to smaller then next value.")]
-            public List<int> Seperators { get; set; }
+            public IList<int> Seperators { get; set; }
 
             [Option("prefix",
+                Default = "",
                 HelpText = "The prefix will be added in front of each generated collection.")]
             public string Prefix { get; set; }
 
@@ -78,13 +80,12 @@ namespace osu_database_manager
 
             [Option("mergeexisting",
                 Default = false,
-                HelpText = "Merge generated collection with existing one, will overwrite existing collections.")]
+                HelpText = "Merge generated collection with an existing one.")]
             public bool MergeWithExisting { get; set; }
         }
 
         static void Main(string[] args)
         {
-            //args = new string[] { "merge", "-i", "D:\\dfsfdsf.db" };
             CommandLine.Parser.Default.ParseArguments<MergeOptions, GenColByAccOptions>(args)
                 .MapResult(
                   (MergeOptions opts) => RunMergeAndReturnExitCode(opts),
@@ -95,6 +96,7 @@ namespace osu_database_manager
         // generate collections by accuracy
         private static object RunGenColByAccAndReturnExitCode(GenColByAccOptions opts)
         {
+
             // if online:
             //      check if osu!.db present
             //      check if key and name present
@@ -117,7 +119,7 @@ namespace osu_database_manager
             // if local: get scores from scores.db
             // if name specified: can use ranked_score to see if all maps
 
-
+            CollectionDb colDb = null;
             if (opts.Online)
             {
                 if (string.IsNullOrWhiteSpace(opts.Key)) throw new ArgumentException("Key is empty.");
@@ -132,26 +134,26 @@ namespace osu_database_manager
                 if (!File.Exists(scoresDbPath)) throw new FileNotFoundException("Missing scores.db in selected folder.");
 
                 ScoresDb scoresDb = new ScoresDb(scoresDbPath);
-
-                List<Score> scores = new List<Score>();
-                foreach (BeatmapScores beatmapScores in scoresDb.GetBeatmapScores())
-                {
-                    Score topScore = beatmapScores.GetHighestScore();
-                    if (topScore != null && (string.IsNullOrWhiteSpace(opts.Name) || topScore.PlayerName == opts.Name))
-                    {
-                        scores.Add(topScore);
-                    }
-                }
-                Collection col = GenerateCollectionByAccuracy(opts.Seperators, scores);
-
-
-                throw new NotImplementedException();
+                List<int> seperators = new List<int>(opts.Seperators);
+                colDb = CollectionTools.GenerateCollectionDbByAccuracy(scoresDb, seperators, opts.Name, opts.Prefix);
             }
 
+            if (opts.MergeWithExisting)
+            {
+                string existingPath = Path.Combine(opts.OsuPath, "collection.db");
+                if (!File.Exists(existingPath))
+                {
+                    Console.WriteLine("Missing collection.db in selected folder. Skipping merge operation");
+                }
+                else
+                {
+                    CollectionDb existing = new CollectionDb(existingPath);
+                    existing.Merge(colDb, AddMode.Overwrite);
+                    colDb = existing;
+                }
+            }
 
-
-
-            throw new NotImplementedException();
+            colDb.WriteToFile(opts.OutputFile);
             return 0;
         }
 

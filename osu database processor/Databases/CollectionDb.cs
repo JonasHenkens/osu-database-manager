@@ -81,6 +81,11 @@ namespace osu_database_processor.Databases
             return Collections.AsReadOnly();
         }
 
+        /// <summary>
+        /// Skips collection if one with same name exists.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         public bool AddCollection(Collection collection)
         {
             return AddCollection(collection, AddMode.Skip);
