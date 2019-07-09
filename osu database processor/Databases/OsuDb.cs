@@ -108,13 +108,11 @@ namespace osu_database_processor.Databases
             }
             Beatmaps.Add(beatmap);
             return true;
-            // TODO: FolderCount++ if new folder OR add UpdateFolderCount method (checks amount of folders)
         }
 
         public bool RemoveBeatmap(Beatmap beatmap)
         {
             return Beatmaps.Remove(beatmap);
-            // TODO: FolderCount-- if all from folder removed OR add UpdateFolderCount method (checks amount of folders)
         }
 
         public bool RemoveBeatmap(string md5)

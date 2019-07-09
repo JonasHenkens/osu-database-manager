@@ -80,17 +80,73 @@ namespace osu_database_manager
 
             [Option("mergeexisting",
                 Default = false,
-                HelpText = "Merge generated collection with an existing one.")]
+                HelpText = "Merge generated collection with the existing one.")]
+            public bool MergeWithExisting { get; set; }
+        }
+
+        [Verb("collectionsgrade", HelpText = "Generate collections based on grade.")]
+        class GenColByGradeOptions
+        {
+            [Option('i', "input",
+                Required = true,
+                HelpText = "Path to osu! folder.")]
+            public string OsuPath { get; set; }
+
+            [Option('o', "output",
+                Required = true,
+                HelpText = "Output file.")]
+            public string OutputFile { get; set; }
+
+            [Option("prefix",
+                Default = "",
+                HelpText = "The prefix will be added in front of each generated collection.")]
+            public string Prefix { get; set; }
+
+            [Option("mode",
+                Default = "standard",
+                HelpText = "standard, taiko, ctb or mania")]
+            public string Mode { get; set; }
+
+            [Option("mergeexisting",
+                Default = false,
+                HelpText = "Merge generated collection with the existing one.")]
             public bool MergeWithExisting { get; set; }
         }
 
         static void Main(string[] args)
         {
-            CommandLine.Parser.Default.ParseArguments<MergeOptions, GenColByAccOptions>(args)
+            CommandLine.Parser.Default.ParseArguments<MergeOptions, GenColByAccOptions, GenColByGradeOptions>(args)
                 .MapResult(
                   (MergeOptions opts) => RunMergeAndReturnExitCode(opts),
                   (GenColByAccOptions opts) => RunGenColByAccAndReturnExitCode(opts),
+                  (GenColByGradeOptions opts) => RunGenColByGradeAndReturnExitCode(opts),
                   errs => 1);
+        }
+
+        private static object RunGenColByGradeAndReturnExitCode(GenColByGradeOptions opts)
+        {
+            string osuDbPath = Path.Combine(opts.OsuPath, "osu!.db");
+            if (!File.Exists(osuDbPath)) throw new FileNotFoundException("Missing osu!.db in selected folder.");
+            CollectionDb existingCollection = null;
+
+            if (opts.MergeWithExisting)
+            {
+                string existingPath = Path.Combine(opts.OsuPath, "collection.db");
+                if (!File.Exists(existingPath))
+                {
+                    Console.WriteLine("Missing collection.db in selected folder. Skipping merge operation");
+                }
+                else
+                {
+                    existingCollection = new CollectionDb(existingPath);
+                }
+            }
+
+            OsuDb osuDb = new OsuDb(osuDbPath);
+            Mode gameMode = (Mode)Enum.Parse(typeof(Mode), opts.Mode, true);
+            CollectionDb colDb = CollectionTools.GenerateCollectionDbByGrade(osuDb, gameMode, opts.Prefix, existingCollection);
+            colDb.WriteToFile(opts.OutputFile);
+            return 0;
         }
 
         // generate collections by accuracy
@@ -200,20 +256,6 @@ namespace osu_database_manager
             }
 
             return 0;
-        }
-
-        private static void HandleParseError(IEnumerable<Error> errs)
-        {
-            foreach (var item in errs)
-            {
-                Console.WriteLine(item);
-            }
-        }
-
-        public static Collection GenerateCollectionByAccuracy(List<int> seperators, List<Score> scores)
-        {
-
-            throw new NotImplementedException();
         }
 
     }

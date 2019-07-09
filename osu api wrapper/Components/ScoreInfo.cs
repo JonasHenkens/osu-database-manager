@@ -55,7 +55,7 @@ namespace osu_api_wrapper.Components
         public DateTime Date { get; set; }
 
         [JsonProperty("rank")]
-        public ScoreRank Rank { get; set; }
+        public Grade Rank { get; set; }
 
         // get_scores, get_user_best
         [JsonProperty("pp", NullValueHandling = NullValueHandling.Ignore)]

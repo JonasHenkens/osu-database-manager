@@ -24,7 +24,7 @@ namespace osu_api_wrapper
         Loved
     }
 
-    public enum ScoreRank
+    public enum Grade
     {
         XH, //SS+
         SH, //S+

@@ -1,4 +1,5 @@
-﻿using osu_database_processor.Components;
+﻿using osu_database_processor;
+using osu_database_processor.Components;
 using osu_database_processor.Databases;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,16 @@ namespace osu_database_manager.Tools
 
                 if (topScore != null) scores.Add(topScore);
             }
-            List<Collection> collections = GenerateCollectionsByAccuracy(scores, seperators, prefix);
 
-            CollectionDb colDb = new CollectionDb(20190620);
+            List<Collection> collections = GenerateCollectionsByAccuracy(scores, seperators, prefix);
+            CollectionDb colDb;
+
+            if (collectionDb != null) colDb = collectionDb;
+            else colDb = new CollectionDb(20190620);
+
             foreach (Collection collection in collections)
             {
-                colDb.AddCollection(collection);
-            }
-
-            if (collectionDb != null)
-            {
-                collectionDb.Merge(colDb, osu_database_processor.AddMode.Overwrite);
-                colDb = collectionDb;
+                colDb.AddCollection(collection, AddMode.Overwrite);
             }
 
             return colDb;
@@ -93,5 +92,61 @@ namespace osu_database_manager.Tools
 
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Use scoresDb to generate collections based on grade.
+        /// </summary>
+        /// <param name="scoresDb"></param>
+        /// <param name="seperators"></param>
+        /// <param name="name"></param>
+        /// <param name="collectionDb">Merge collections into existing collectionDb. Overwrites existing collections.</param>
+        /// <returns></returns>
+        public static CollectionDb GenerateCollectionDbByGrade(OsuDb osuDb, Mode gameMode, string prefix = "", CollectionDb collectionDb = null)
+        {
+            CollectionDb colDb = new CollectionDb(20190620);
+
+            foreach (Beatmap beatmap in osuDb.GetBeatmaps())
+            {
+                Grade grade = beatmap.getGrade(gameMode);
+
+                string letter;
+                switch (grade)
+                {
+                    case Grade.Unplayed:
+                        continue;
+                    case Grade.XH:
+                        letter = "SS+";
+                        break;
+                    case Grade.SH:
+                        letter = "S+";
+                        break;
+                    case Grade.X:
+                        letter = "SS";
+                        break;
+                    default:
+                        letter = grade.ToString();
+                        break;
+                }
+
+                Collection col = colDb.GetCollectionByName(prefix + letter);
+                if (col == null)
+                {
+                    colDb.AddCollection(new Collection(prefix + letter));
+                }
+
+                colDb.GetCollectionByName(prefix + letter).AddBeatmap(beatmap.MD5Beatmap);
+
+            }
+
+            if (collectionDb != null)
+            {
+                collectionDb.Merge(colDb, AddMode.Overwrite);
+                colDb = collectionDb;
+            }
+
+
+            return colDb;
+        }
+
     }
 }

@@ -56,10 +56,10 @@ namespace osu_database_processor.Components
         public int BeatmapID { get; set; }
         public int BeatmapSetID { get; set; }
         public int ThreadID { get; set; }
-        public ScoreRank GradeAchievedStandard { get; set; }
-        public ScoreRank GradeAchievedTaiko { get; set; }
-        public ScoreRank GradeAchievedCTB { get; set; }
-        public ScoreRank GradeAchievedMania { get; set; }
+        public Grade GradeAchievedStandard { get; set; }
+        public Grade GradeAchievedTaiko { get; set; }
+        public Grade GradeAchievedCTB { get; set; }
+        public Grade GradeAchievedMania { get; set; }
         public short LocalBeatmapOffset { get; set; }
         public float StackLeniency { get; set; }
         public Mode GameplayMode { get; set; }
@@ -169,10 +169,10 @@ namespace osu_database_processor.Components
             BeatmapID = o.ReadInt32();
             BeatmapSetID = o.ReadInt32();
             ThreadID = o.ReadInt32();
-            GradeAchievedStandard = (ScoreRank)o.ReadByte();
-            GradeAchievedTaiko = (ScoreRank)o.ReadByte();
-            GradeAchievedCTB = (ScoreRank)o.ReadByte();
-            GradeAchievedMania = (ScoreRank)o.ReadByte();
+            GradeAchievedStandard = (Grade)o.ReadByte();
+            GradeAchievedTaiko = (Grade)o.ReadByte();
+            GradeAchievedCTB = (Grade)o.ReadByte();
+            GradeAchievedMania = (Grade)o.ReadByte();
             LocalBeatmapOffset = o.ReadInt16();
             StackLeniency = o.ReadSingle();
             GameplayMode = (Mode)o.ReadByte();
@@ -308,6 +308,23 @@ namespace osu_database_processor.Components
 
             o.Write(LastModificationTime);
             o.Write(ManiaScrollSpeed);
+        }
+
+        public Grade getGrade(Mode gameMode)
+        {
+            switch (gameMode)
+            {
+                case Mode.Standard:
+                    return GradeAchievedStandard;
+                case Mode.Taiko:
+                    return GradeAchievedTaiko;
+                case Mode.CTB:
+                    return GradeAchievedCTB;
+                case Mode.Mania:
+                    return GradeAchievedMania;
+                default:
+                    return Grade.Unplayed;
+            }
         }
     }
 }

@@ -16,6 +16,12 @@ namespace osu_database_processor.Components
             MD5s = new List<string>();
         }
 
+        public Collection(string name, List<string> md5s)
+        {
+            Name = name;
+            MD5s = md5s;
+        }
+
         public Collection(OsuReader o)
         {
             ReadFromStream(o);

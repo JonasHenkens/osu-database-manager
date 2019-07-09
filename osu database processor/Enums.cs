@@ -24,7 +24,7 @@ namespace osu_database_processor
         Loved
     }
 
-    public enum ScoreRank
+    public enum Grade
     {
         XH, //SS+
         SH, //S+
