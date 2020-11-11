@@ -93,8 +93,10 @@ namespace osu_database_processor.Components
         public void ReadFromStream(OsuReader o, int version)
         {
             Version = version;
-
-            SizeInBytes = o.ReadInt32();
+            if (version < 20191106)
+            {
+                SizeInBytes = o.ReadInt32();
+            }
             ArtistName = o.ReadString();
             ArtistNameUnicode = o.ReadString();
             SongTitle = o.ReadString();

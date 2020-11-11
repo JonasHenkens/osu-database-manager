@@ -16,6 +16,7 @@ namespace osu_database_processor.Databases
         public String PlayerName { get; set; }
         public int NumberOfBeatmaps { get { return Beatmaps.Count; } }
         private List<Beatmap> Beatmaps;
+        public UserPermission UserPermission;
         // Unknown, always seems to be 4
 
         public OsuDb(int version, string playername)
@@ -55,7 +56,7 @@ namespace osu_database_processor.Databases
                 {
                     Beatmaps.Add(new Beatmap(o, Version));
                 }
-                o.AssertInt(4, "OsuDb: Unknown is not 4");
+                UserPermission = (UserPermission)o.ReadInt32();
             }
             catch (Exception e)
             {

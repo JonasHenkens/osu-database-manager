@@ -126,4 +126,16 @@ namespace osu_database_processor
         Qualified = 3,
         Loved = 4
     }
+
+    [Flags]
+    public enum UserPermission
+    {
+        None = 0,
+        Normal = 1,
+        Moderator = 2,
+        Supporter = 8,
+        Friend = 8,
+        Peppy = 16,
+        WorldCupStaff = 32
+    }
 }
