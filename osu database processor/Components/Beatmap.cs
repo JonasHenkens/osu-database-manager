@@ -210,7 +210,10 @@ namespace osu_database_processor.Components
 
         public void WriteToStream(OsuWriter o)
         {
-            o.Write(SizeInBytes);
+            if (Version < 20191106)
+            {
+                o.Write(SizeInBytes);
+            }
             o.Write(ArtistName);
             o.Write(ArtistNameUnicode);
             o.Write(SongTitle);

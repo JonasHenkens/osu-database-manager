@@ -77,7 +77,24 @@ namespace osu_database_processor.Databases
             {
                 beatmap.WriteToStream(o);
             }
-            o.Write(4);
+            o.Write((int)UserPermission);
+        }
+
+        public string WriteToFile(string path)
+        {
+            string newPath = path;
+            int i = 2;
+            while (File.Exists(newPath))
+            {
+                string suffix = " (" + i + ")";
+                newPath = Path.Combine(Path.GetDirectoryName(path), string.Concat(Path.GetFileNameWithoutExtension(path), suffix, Path.GetExtension(path)));
+                i++;
+            }
+            OsuWriter o = new OsuWriter(new FileStream(newPath, FileMode.CreateNew));
+            WriteToStream(o);
+            o.Flush();
+            o.Close();
+            return newPath;
         }
 
         public IReadOnlyList<Beatmap> GetBeatmaps()
